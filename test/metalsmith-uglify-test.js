@@ -4,12 +4,15 @@ var should     = require('should')
   , assertDir  = require('assert-dir-equal')
   , Metalsmith = require('metalsmith')
   , fs         = require('fs')
+  , path       = require('path')
   , uglify     = require('../')
   , isDir
   , uglifyAll
   , uglifyMap
   , preserveComments
   , preserveSomeComments
+  , conditionalComments
+  , uglifyFilter
   , uglifyNone
   , noData
   , uglifyError
@@ -80,13 +83,49 @@ preserveSomeComments = function (done) {
     });
 };
 
+// conditionalComments
+// -------------------
+conditionalComments = function (done) {
+  var options = {
+    preserveComments: function (node, comment) {
+      return comment.value.indexOf('TODO') === -1;
+    }
+  };
+
+  Metalsmith('test/conditional-comments')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+      assertDir('test/conditional-comments/expected', 'test/conditional-comments/build');
+      done();
+    });
+};
+
+// uglifyFilter
+// ------------
+uglifyFilter = function (done) {
+  var options = {
+    filter: function (filepath) {
+      return path.dirname(filepath).indexOf('other-scripts') === -1;
+    }
+  };
+
+  Metalsmith('test/uglify-filter')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+      assertDir('test/uglify-filter/expected', 'test/uglify-filter/build');
+      done();
+    });
+};
+
 // uglifyNone
 // ----------
 uglifyNone = function (done) {
   Metalsmith('test/uglify-none')
     .use(uglify())
     .build(function (err) {
-      should.not.exists(err);
+      should.not.exist(err);
       assertDir('test/uglify-none/expected', 'test/uglify-none/build');
       done();
     });
@@ -135,6 +174,8 @@ describe('metalsmith-uglify tests', function () {
     it('should use a source map', uglifyMap);
     it('should preserve all comments', preserveComments);
     it('should preserve some comments', preserveSomeComments);
+    it('should preserve comments conditionally', conditionalComments);
+    it('should filter and only minify given js files', uglifyFilter);
   });
 
   describe('Level 2', function () {
