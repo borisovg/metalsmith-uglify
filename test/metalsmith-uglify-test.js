@@ -9,6 +9,7 @@ var should     = require('should')
   , uglifyAll
   , uglifyMap
   , preserveComments
+  , preserveSomeComments
   , uglifyNone
   , noData
   , uglifyError
@@ -59,6 +60,22 @@ preserveComments = function (done) {
     .build(function (err) {
       should.not.exist(err);
       assertDir('test/preserve-comments/expected', 'test/preserve-comments/build');
+      done();
+    });
+};
+
+// preserveSomeComments
+// --------------------
+preserveSomeComments = function (done) {
+  var options = {
+    preserveComments: 'some'
+  };
+
+  Metalsmith('test/preserve-some-comments')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+      assertDir('test/preserve-some-comments/expected', 'test/preserve-some-comments/build');
       done();
     });
 };
@@ -117,6 +134,7 @@ describe('metalsmith-uglify tests', function () {
     it('should uglify all .js files', uglifyAll);
     it('should use a source map', uglifyMap);
     it('should preserve all comments', preserveComments);
+    it('should preserve some comments', preserveSomeComments);
   });
 
   describe('Level 2', function () {
