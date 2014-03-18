@@ -30,9 +30,11 @@
     "coveralls": "^2.10.0",
     "jshint-stylish": "~0.1.5",
     "docco": "~0.6.3",
-    "metalsmith": "^0.4.0"
+    "metalsmith": "^0.4.0",
+    "assert-dir-equal": "^1.0.1"
   },
   "dependencies": {
-    "async": "^0.2.10"
+    "async": "^0.2.10",
+    "uglify-js": "^2.4.13"
   }
 }
