@@ -29,6 +29,10 @@
     "istanbul": "~0.2.4",
     "coveralls": "^2.10.0",
     "jshint-stylish": "~0.1.5",
-    "docco": "~0.6.3"
+    "docco": "~0.6.3",
+    "metalsmith": "^0.4.0"
+  },
+  "dependencies": {
+    "async": "^0.2.10"
   }
 }
