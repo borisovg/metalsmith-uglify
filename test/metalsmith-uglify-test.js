@@ -3,7 +3,7 @@
 var should     = require('should')
   , assertDir  = require('assert-dir-equal')
   , Metalsmith = require('metalsmith')
-  , fs         = require('fs')
+  , fs         = require('fs-extra')
   , path       = require('path')
   , uglify     = require('../')
   , isDir
@@ -13,9 +13,11 @@ var should     = require('should')
   , preserveSomeComments
   , conditionalComments
   , uglifyFilter
+  , concat
   , uglifyNone
   , noData
   , uglifyError
+  , badFilter
   ;
 
 isDir = function (dir) {
@@ -39,7 +41,7 @@ uglifyAll = function (done) {
 // ---------
 uglifyMap = function (done) {
   var options = {
-    outSourceMap: true
+    sourceMap: true
   };
 
   Metalsmith('test/uglify-map')
@@ -119,6 +121,23 @@ uglifyFilter = function (done) {
     });
 };
 
+// concat
+// ------
+concat = function (done) {
+  var options = {
+    concat: 'scripts/app.min.js',
+    sourceMap: true
+  };
+
+  Metalsmith('test/concat')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+
+      done();
+    });
+};
+
 // uglifyNone
 // ----------
 uglifyNone = function (done) {
@@ -158,16 +177,47 @@ uglifyError = function (done) {
     .build(function (err) {
       should(err).exist;
       should(err.toString()).be.equal(
-        'Error: Uglify: Unexpected token: punc (() in scripts/main.js'
+        'Error: Uglify: Unexpected token: punc (()'
       );
       should(isDir(__dirname + '/uglify-error/build')).be.equal(false);
       done();
     });
 };
 
+// badFilter
+// ---------
+badFilter = function (done) {
+  var options = {
+    filter: {}
+  };
+
+  Metalsmith('test/bad-filter')
+    .use(uglify(options))
+    .build(function (err) {
+      should(err).not.exist;
+      //should(isDir(__dirname)).be.equal(false);
+      done();
+    });
+
+};
+
 // Tests
 // -----
 describe('metalsmith-uglify tests', function () {
+
+  before(function () {
+    fs.removeSync(__dirname + '/bad-filter/build');
+    fs.removeSync(__dirname + '/concat/build');
+    fs.removeSync(__dirname + '/conditional-comments/build');
+    fs.removeSync(__dirname + '/no-data/build');
+    fs.removeSync(__dirname + '/preserve-comments/build');
+    fs.removeSync(__dirname + '/preserve-some-comments/build');
+    fs.removeSync(__dirname + '/uglify-all/build');
+    fs.removeSync(__dirname + '/uglify-error/build');
+    fs.removeSync(__dirname + '/uglify-filter/build');
+    fs.removeSync(__dirname + '/uglify-map/build');
+    fs.removeSync(__dirname + '/uglify-none/build');
+  });
 
   describe('Level 1', function () {
     it('should uglify all .js files', uglifyAll);
@@ -176,12 +226,14 @@ describe('metalsmith-uglify tests', function () {
     it('should preserve some comments', preserveSomeComments);
     it('should preserve comments conditionally', conditionalComments);
     it('should filter and only minify given js files', uglifyFilter);
+    it('should concat all js files', concat);
   });
 
   describe('Level 2', function () {
     it('should work without any .js files', uglifyNone);
     it('should handle data not being passed', noData);
     it('should handle an uglify error', uglifyError);
+    it('should handle a wrong datatype being passed into filter', badFilter);
   });
 
 });
