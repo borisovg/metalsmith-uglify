@@ -14,6 +14,7 @@ var should     = require('should')
   , conditionalComments
   , uglifyFilter
   , concat
+  , sourceMapName
   , uglifyNone
   , noData
   , uglifyError
@@ -133,7 +134,27 @@ concat = function (done) {
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
+      assertDir('test/concat/expected', 'test/concat/build');
+      done();
+    });
+};
 
+// sourceMapName
+// -------------
+sourceMapName = function (done) {
+  var once = false
+    , options = {
+        sourceMap: true,
+        sourceMapName: 'scripts/source-map.map',
+        concat: 'scripts/app.min.js'
+      }
+    ;
+
+  Metalsmith('test/source-map-name')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+      assertDir('test/source-map-name/expected', 'test/source-map-name/build');
       done();
     });
 };
@@ -227,6 +248,7 @@ describe('metalsmith-uglify tests', function () {
     it('should preserve comments conditionally', conditionalComments);
     it('should filter and only minify given js files', uglifyFilter);
     it('should concat all js files', concat);
+    it('should use a custom source map name', sourceMapName);
   });
 
   describe('Level 2', function () {
