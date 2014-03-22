@@ -19,6 +19,7 @@ var should     = require('should')
   , noData
   , uglifyError
   , badFilter
+  , dynoSourceMapName
   ;
 
 isDir = function (dir) {
@@ -142,19 +143,36 @@ concat = function (done) {
 // sourceMapName
 // -------------
 sourceMapName = function (done) {
-  var once = false
-    , options = {
-        sourceMap: true,
-        sourceMapName: 'scripts/source-map.map',
-        concat: 'scripts/app.min.js'
-      }
-    ;
+  var options = {
+    sourceMap: true,
+    sourceMapName: 'scripts/source-map.map',
+    concat: 'scripts/app.min.js'
+  };
 
   Metalsmith('test/source-map-name')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
       assertDir('test/source-map-name/expected', 'test/source-map-name/build');
+      done();
+    });
+};
+
+// dynoSourceMapName
+// -----------------
+dynoSourceMapName = function (done) {
+  var options = {
+    sourceMap: true,
+    sourceMapName: function (name) {
+      return name.replace('.map', '.v1.map');
+    }
+  };
+
+  Metalsmith('test/dyno-source-map-name')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+      assertDir('test/dyno-source-map-name/expected', 'test/dyno-source-map-name/build');
       done();
     });
 };
@@ -249,6 +267,7 @@ describe('metalsmith-uglify tests', function () {
     it('should filter and only minify given js files', uglifyFilter);
     it('should concat all js files', concat);
     it('should use a custom source map name', sourceMapName);
+    it('should dynamically rename source maps', dynoSourceMapName);
   });
 
   describe('Level 2', function () {
