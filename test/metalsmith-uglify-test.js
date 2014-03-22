@@ -20,6 +20,7 @@ var should     = require('should')
   , uglifyError
   , badFilter
   , dynoSourceMapName
+  , sourceMapIn
   ;
 
 isDir = function (dir) {
@@ -177,6 +178,25 @@ dynoSourceMapName = function (done) {
     });
 };
 
+// sourceMapIn
+// -----------
+sourceMapIn = function (done) {
+  var options = {
+    sourceMap: true,
+    concat: 'scripts/app.min.js',
+    sourceMapIn: 'scripts/main.map',
+    filter: 'scripts/main.js'
+  };
+
+  Metalsmith('test/source-map-in')
+    .use(uglify(options))
+    .build(function (err) {
+      should.not.exist(err);
+      // TODO
+      done();
+    });
+};
+
 // uglifyNone
 // ----------
 uglifyNone = function (done) {
@@ -248,9 +268,12 @@ describe('metalsmith-uglify tests', function () {
     fs.removeSync(__dirname + '/bad-filter/build');
     fs.removeSync(__dirname + '/concat/build');
     fs.removeSync(__dirname + '/conditional-comments/build');
+    fs.removeSync(__dirname + '/dyno-source-map-name/build');
     fs.removeSync(__dirname + '/no-data/build');
     fs.removeSync(__dirname + '/preserve-comments/build');
     fs.removeSync(__dirname + '/preserve-some-comments/build');
+    fs.removeSync(__dirname + '/source-map-in/build');
+    fs.removeSync(__dirname + '/source-map-name/build');
     fs.removeSync(__dirname + '/uglify-all/build');
     fs.removeSync(__dirname + '/uglify-error/build');
     fs.removeSync(__dirname + '/uglify-filter/build');
@@ -268,6 +291,7 @@ describe('metalsmith-uglify tests', function () {
     it('should concat all js files', concat);
     it('should use a custom source map name', sourceMapName);
     it('should dynamically rename source maps', dynoSourceMapName);
+    it('should utilize an in source map', sourceMapIn);
   });
 
   describe('Level 2', function () {
