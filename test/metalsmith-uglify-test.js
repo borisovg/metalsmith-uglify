@@ -192,7 +192,7 @@ sourceMapIn = function (done) {
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
-      // TODO
+      assertDir('test/source-map-in/expected', 'test/source-map-in/build');
       done();
     });
 };
