@@ -2,7 +2,7 @@
 
 var should     = require('should')
   , assertDir  = require('assert-dir-equal')
-  , Metalsmith = require('metalsmith')
+  , metalsmith = require('metalsmith')
   , fs         = require('fs-extra')
   , path       = require('path')
   , uglify     = require('../')
@@ -26,12 +26,12 @@ var should     = require('should')
 isDir = function (dir) {
   try { fs.statSync(dir).isDirectory(); }
   catch (exception) { return false; }
-}
+};
 
 // uglifyAll
 // ---------
 uglifyAll = function (done) {
-  Metalsmith('test/uglify-all')
+  metalsmith('test/uglify-all')
     .use(uglify())
     .build(function (err) {
       should.not.exist(err);
@@ -47,14 +47,14 @@ uglifyMap = function (done) {
     sourceMap: true
   };
 
-  Metalsmith('test/uglify-map')
+  metalsmith('test/uglify-map')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
       assertDir('test/uglify-map/expected', 'test/uglify-map/build');
       done();
     });
-}
+};
 
 // preserveComments
 // ----------------
@@ -63,11 +63,14 @@ preserveComments = function (done) {
     preserveComments: 'all'
   };
 
-  Metalsmith('test/preserve-comments')
+  metalsmith('test/preserve-comments')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
-      assertDir('test/preserve-comments/expected', 'test/preserve-comments/build');
+      assertDir(
+        'test/preserve-comments/expected',
+        'test/preserve-comments/build'
+      );
       done();
     });
 };
@@ -79,11 +82,14 @@ preserveSomeComments = function (done) {
     preserveComments: 'some'
   };
 
-  Metalsmith('test/preserve-some-comments')
+  metalsmith('test/preserve-some-comments')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
-      assertDir('test/preserve-some-comments/expected', 'test/preserve-some-comments/build');
+      assertDir(
+        'test/preserve-some-comments/expected',
+        'test/preserve-some-comments/build'
+      );
       done();
     });
 };
@@ -97,11 +103,14 @@ conditionalComments = function (done) {
     }
   };
 
-  Metalsmith('test/conditional-comments')
+  metalsmith('test/conditional-comments')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
-      assertDir('test/conditional-comments/expected', 'test/conditional-comments/build');
+      assertDir(
+        'test/conditional-comments/expected',
+        'test/conditional-comments/build'
+      );
       done();
     });
 };
@@ -115,7 +124,7 @@ uglifyFilter = function (done) {
     }
   };
 
-  Metalsmith('test/uglify-filter')
+  metalsmith('test/uglify-filter')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
@@ -132,7 +141,7 @@ concat = function (done) {
     sourceMap: true
   };
 
-  Metalsmith('test/concat')
+  metalsmith('test/concat')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
@@ -150,7 +159,7 @@ sourceMapName = function (done) {
     concat: 'scripts/app.min.js'
   };
 
-  Metalsmith('test/source-map-name')
+  metalsmith('test/source-map-name')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
@@ -169,11 +178,14 @@ dynoSourceMapName = function (done) {
     }
   };
 
-  Metalsmith('test/dyno-source-map-name')
+  metalsmith('test/dyno-source-map-name')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
-      assertDir('test/dyno-source-map-name/expected', 'test/dyno-source-map-name/build');
+      assertDir(
+        'test/dyno-source-map-name/expected',
+        'test/dyno-source-map-name/build'
+      );
       done();
     });
 };
@@ -188,7 +200,7 @@ sourceMapIn = function (done) {
     filter: 'scripts/main.js'
   };
 
-  Metalsmith('test/source-map-in')
+  metalsmith('test/source-map-in')
     .use(uglify(options))
     .build(function (err) {
       should.not.exist(err);
@@ -200,7 +212,7 @@ sourceMapIn = function (done) {
 // uglifyNone
 // ----------
 uglifyNone = function (done) {
-  Metalsmith('test/uglify-none')
+  metalsmith('test/uglify-none')
     .use(uglify())
     .build(function (err) {
       should.not.exist(err);
@@ -212,14 +224,14 @@ uglifyNone = function (done) {
 // noData
 // ------
 noData = function (done) {
-  Metalsmith('test/no-data')
+  metalsmith('test/no-data')
     .use(function (files, metalsmith, done) {
       delete files['scripts/main.js'].contents;
       done();
     })
     .use(uglify())
     .build(function (err) {
-      should(err).exist;
+      should.exist(err);
       should(err.toString()).be.equal(
         'Error: data for uglify file does not exist: scripts/main.js'
       );
@@ -231,16 +243,31 @@ noData = function (done) {
 // uglifyError
 // -----
 uglifyError = function (done) {
-  Metalsmith('test/uglify-error')
+  metalsmith('test/uglify-error')
     .use(uglify())
     .build(function (err) {
-      should(err).exist;
+      should.exist(err);
       should(err.toString()).be.equal(
         'Error: Uglify: Unexpected token: punc (()'
       );
       should(isDir(__dirname + '/uglify-error/build')).be.equal(false);
-      done();
+      error2();
     });
+
+  function error2() {
+    metalsmith('test/uglify-error')
+      .use(uglify({
+        concat: 'scripts/app.min.js'
+      }))
+      .build(function (err) {
+        should.exist(err);
+        should(err.toString()).be.equal(
+          'Error: Uglify: Unexpected token: punc (()'
+        );
+        should(isDir(__dirname + '/uglify-error/build')).be.equal(false);
+        done();
+      })
+  }
 };
 
 // badFilter
@@ -250,11 +277,11 @@ badFilter = function (done) {
     filter: {}
   };
 
-  Metalsmith('test/bad-filter')
+  metalsmith('test/bad-filter')
     .use(uglify(options))
     .build(function (err) {
-      should(err).not.exist;
-      //should(isDir(__dirname)).be.equal(false);
+      should.not.exist(err);
+      assertDir('test/bad-filter/expected', 'test/bad-filter/build');
       done();
     });
 
