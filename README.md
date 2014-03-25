@@ -1,5 +1,11 @@
 # metalsmith-uglify
 
+[![NPM version](http://img.shields.io/npm/v/metalsmith-uglify.svg)](https://www.npmjs.org/package/metalsmith-uglify)
+[![Dependency Status](http://img.shields.io/gemnasium/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
+[![Code Climate](http://img.shields.io/codeclimate/github/ksmithut/metalsmith-uglify.svg)](https://codeclimate.com/github/ksmithut/metalsmith-uglify)
+[![Build Status](http://img.shields.io/travis/ksmithut/metalsmith-uglify.svg)](https://travis-ci.org/ksmithut/metalsmith-uglify)
+[![Coverage Status](http://img.shields.io/coveralls/ksmithut/metalsmith-uglify.svg)](https://coveralls.io/r/ksmithut/metalsmith-uglify)
+
 An UglifyJS plugin for metalsmith
 
 ## Installation
