@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-uglify",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An uglify plugin for metalsmith",
   "main": "index.js",
   "scripts": {
@@ -28,13 +28,13 @@
     "coveralls": "^2.10.0",
     "docco": "^0.6.3",
     "fs-extra": "^0.8.1",
-    "gulp": "^3.5.6",
+    "gulp": "^3.6.0",
     "gulp-exec": "^1.0.4",
     "gulp-istanbul": "^0.1.1",
     "gulp-jshint": "^1.5.0",
     "gulp-mocha": "^0.4.1",
     "gulp-util": "^2.2.14",
-    "istanbul": "^0.2.6",
+    "istanbul": "^0.2.7",
     "jshint-stylish": "^0.1.5",
     "metalsmith": "^0.5.0",
     "mocha": "^1.18.2",
@@ -42,7 +42,7 @@
     "should": "^3.1.4"
   },
   "dependencies": {
-    "async": "^0.2.10",
+    "async": "^0.4.0",
     "globule": "^0.2.0",
     "lodash": "^2.4.1",
     "uglify-js": "git://github.com/ksmithut/UglifyJS2"
