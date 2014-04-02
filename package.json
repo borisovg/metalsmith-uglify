@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-uglify",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "An uglify plugin for metalsmith",
   "main": "index.js",
   "scripts": {
@@ -39,10 +39,10 @@
     "metalsmith": "^0.5.0",
     "mocha": "^1.18.2",
     "mocha-lcov-reporter": "0.0.1",
-    "should": "^3.1.4"
+    "should": "^3.2.0"
   },
   "dependencies": {
-    "async": "^0.4.0",
+    "async": "^0.6.2",
     "globule": "^0.2.0",
     "lodash": "^2.4.1",
     "uglify-js": "git://github.com/ksmithut/UglifyJS2"
