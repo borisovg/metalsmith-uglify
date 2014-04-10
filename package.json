@@ -31,7 +31,7 @@
     "gulp": "^3.6.0",
     "gulp-exec": "^1.0.4",
     "gulp-istanbul": "^0.1.1",
-    "gulp-jshint": "^1.5.0",
+    "gulp-jshint": "^1.5.3",
     "gulp-mocha": "^0.4.1",
     "gulp-util": "^2.2.14",
     "istanbul": "^0.2.7",
@@ -42,7 +42,7 @@
     "should": "^3.2.0"
   },
   "dependencies": {
-    "async": "^0.6.2",
+    "async": "^0.7.0",
     "globule": "^0.2.0",
     "lodash": "^2.4.1",
     "uglify-js": "git://github.com/ksmithut/UglifyJS2"
