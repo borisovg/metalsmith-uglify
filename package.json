@@ -1,12 +1,14 @@
 {
   "name": "metalsmith-uglify",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "An uglify plugin for metalsmith",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly",
-    "coveralls": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "jshint": "jshint --reporter node_modules/jshint-stylish/stylish.js index.js lib/**",
+    "check-cov": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "test": "istanbul cover _mocha",
+    "posttest": "npm run check-cov; npm run jshint;",
+    "codeclimate": "cat ./coverage/lcov.info | codeclimate"
   },
   "repository": {
     "type": "git",
@@ -24,27 +26,18 @@
     "url": "https://github.com/ksmithut/metalsmith-uglify/issues"
   },
   "devDependencies": {
-    "assert-dir-equal": "^1.0.1",
-    "coveralls": "^2.10.0",
-    "docco": "^0.6.3",
-    "fs-extra": "^0.8.1",
-    "gulp": "^3.6.2",
-    "gulp-exec": "^2.0.1",
-    "gulp-istanbul": "^0.1.1",
-    "gulp-jshint": "^1.5.5",
-    "gulp-mocha": "^0.4.1",
-    "gulp-util": "^2.2.14",
-    "istanbul": "^0.2.8",
-    "jshint-stylish": "^0.2.0",
-    "metalsmith": "^0.8.0",
-    "mocha": "^1.18.2",
-    "mocha-lcov-reporter": "0.0.1",
-    "should": "^3.2.0"
+    "codeclimate-test-reporter": "0.0.4",
+    "expect.js": "^0.3.1",
+    "istanbul": "^0.3.5",
+    "jshint": "^2.6.0",
+    "jshint-stylish": "^1.0.0",
+    "metalsmith": "^1.0.1",
+    "mocha": "^2.1.0",
+    "mocha-lcov-reporter": "0.0.1"
   },
   "dependencies": {
-    "async": "^0.8.0",
-    "globule": "^0.2.0",
-    "lodash": "^2.4.1",
-    "uglify-js": "git://github.com/ksmithut/UglifyJS2"
+    "defaults": "^1.0.0",
+    "minimatch": "^2.0.1",
+    "uglify-js": "^2.4.16"
   }
 }

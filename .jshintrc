@@ -48,6 +48,6 @@
   "sub"           : false,
   "supernew"      : false,
 
-  "browser"       : true,
-  "node"          : true
+  "node"          : true,
+  "mocha"         : true
 }

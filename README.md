@@ -8,6 +8,25 @@
 
 An UglifyJS plugin for metalsmith
 
+## 1.x
+
+Note that many options have been removed from the plugin. Many of them may come
+back in the future, but their inclusion was making it really difficult to
+maintain the code. In an effort to simplify usage, and maintainability, I
+followed the example of [terinjokes](https://github.com/terinjokes/) in his
+[gulp-uglify](https://github.com/terinjokes/gulp-uglify) plugin and made this
+plugin do only one thing: uglify.
+
+Currently, sourcemaps are not supported, but I plan on working that in the
+future if it's something that people use. Or even better, a PR would be happily
+accepted. If someone is super interested in taking over maintenance, I wouldn't
+mind passing on the reigns.
+
+Concatenating and minifying all the .js files is also not supported at the
+moment. For now, use
+[metalsmith-concat](https://www.npmjs.com/package/metalsmith-concat) to
+concatenate, then minify afterward.
+
 ## Installation
 
 ```bash
@@ -32,67 +51,39 @@ Metalsmith(__dirname)
 
 It also takes in an object hash with options:
 
-### `options.concat` (Boolean, String) Default `false`
+- **`options.filter`** (String, Function, Array of Strings) Default `'**/*.js'`
 
-Whether or not to concatenate all of the filtered .js files into one minified
-file. Pass false or a falsy value to not concatenate, and a string (the filepath
-of the file you would like to create) if you want to concatenate. Do not put in
-`true`. There is no default name as a default name could conflict with any
-number of other generated files from other plugins.
+  This is how you filter which files actually get included. You can use a glob
+  pattern like the default value, an array of relative filepaths, or a function.
+  The function takes in the filepath to the file. Return `true` if it should be
+  uglified, `false` if it shouldn't be included.
 
-### `options.filter` (String, Function, Array of Strings) Default `'**/*.js'`
+- **`options.preserveComments`** (Boolean, String, Function) Default: `false`
 
-This is how you filter which files actually get included. You can use a glob
-pattern like the default value, an array of glob patterns, or a function. The
-function takes in the filepath to the file. Return `true` if it should be
-uglified, `false` if it shouldn't be included.
+  The manner in which comments should be preserved.
 
-### `options.sourceMap` (Boolean) Default: `false`
+  Pass in `'all'` or `true` to keep all comments
 
-`true` if you want to include the source map, `false` if otherwise
+  Pass in `'some'` to keep comments that start with `!` `@preserve` `@license`
+  `@cc_on`
 
-### `options.sourceMapName` (String, Function) Default: `undefined`
+  Pass in a function to conditionally keep comments. Specify your own comment
+  preservation function. You will be passed the current node and the current
+  comment and are expected to return either true or false.
 
-The name of the source map to generate. If you use a function, the function
-takes the original name as the argument, then you must return what you want the
-new name to be.
+- **`options.removeOriginal`** (Boolean) Default: `false`
 
-```javascript
-Metalsmith(__dirname)
-  .use(uglify({
-    sourceMap: true,
-    sourceMapName: function (name) {
-      return name.replace('.js', '.min.js');
-    }
-  }))
-  .build();
-```
+  This will remove the original (unminified) file from the file tree.
 
-If you pass in a string, you must also have the `options.concat` option set. It
-doesn't make sense to have all of your javascript files come across separately
-and then you have them all output to the same file without the `concat` option.
+- **`options.output`** (Object) Default: `{}`
 
-### `options.sourceMapIn` (String) Default: `undefined`
+  Any additional output options as documented
+  [here](http://lisperator.net/uglifyjs/codegen).
 
-The path to the generated source map (i.e. CoffeeScript). In the future, a
-function type will be supported here.
+- **`options.compress`** (Object)
 
-### `options.includeSources` (Boolean) Default: `false`
-
-Whether or not to include the source content in the source maps
-
-### `options.preserveComments` (Boolean, String, Function) Default: `false`
-
-The manner in which comments should be preserved.
-
-Pass in `'all'` to keep all comments
-
-Pass in `'some'` to keep comments that start with `!` `@preserve` `@license`
-`@cc_on`
-
-Pass in a function to conditionally keep comments. Specify your own comment
-preservation function. You will be passed the current node and the current
-comment and are expected to return either true or false.
+  Customize compressor options. Pass `false` to skip compression altogether.
+  Options for this can be found [here](http://lisperator.net/uglifyjs/compress).
 
 ### Other options
 
@@ -107,49 +98,8 @@ plugins. I have many automated tests running, but to be honest, I hadn't used
 metalsmith too much before writing this plugin. I just saw a need that needed
 to be filled and filled it.
 
-## Caveats
+## Contributing
 
-If you look at the dependencies, you may notice that I'm using a fork of
-UglifyJS. The reason for this is uglifyjs does the file reading for you, but
-with metalsmith, the files have already been read and the contents are passed
-into the plugin. See this [pull request](https://github.com/mishoo/UglifyJS2/pull/324)
-for more info.
-
-I plan on switching back to the main module for uglifyjs once the maintainer
-has time to merge in those pull requests, but for now, we need metalsmith
-compatiblity. Feel free to submit PRs to this repo. I'm not too stingy on naming
-of options. That's why it's in version 0.0.x because the API is subject to
-change.
-
-## Development
-
-This project uses [`gulp`](http://gulpjs.com/) for task automation.
-
-```bash
-$ npm install -g gulp
-```
-
-Here are the three tasks available to use:
-
-* `gulp hint`: runs all pertinent code against jshint. The rules are the ones
-defined in [`.jshintrc`](.jshintrc)
-
-* `gulp test`: runs all tests with
-[`mocha`](http://visionmedia.github.io/mocha/) for passing and
-[`instanbul`](http://gotwarlost.github.io/istanbul/) for code coverage. It
-generates html files showing the code coverage.
-
-* `gulp docs`: builds out all of the documentation using
-[`docco`](http://jashkenas.github.io/docco/). Note that you need to have docco
-installed (`npm install -g docco`). I at one time at docco part of the dev
-dependencies, but now I don't. I may be open to putting it back, but I just
-wanted to keep the package as small as possible.
-
-You can also run `npm test`, and it does basically does the same thing as
-`gulp test`, but an error will be thrown because it does some more istanbul
-stuff to send data to the coverage server. When this project runs through
-travis, it also sends coverage data to coveralls.io.
-
-When forking and doing pull requests, work off of the `develop` branch. I won't
-be super strict on this, but it's what I would prefer. That way we can keep
-`master` clean.
+Pull Requests are welcome! I would just ask that additional tests are written
+for each feature added. If you're interested in maintaining the project, let me
+know, and we'll get everything switched over.
