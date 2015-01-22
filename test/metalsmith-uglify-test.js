@@ -23,6 +23,59 @@ describe('metalsmith-uglify', function () {
       });
   });
 
+  it('should filter by glob', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        filter: 'dir/**/*.js'
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(Object.keys(files)).to.have.length(4);
+        expect(files['dir/test.min.js']).to.be.an(Object);
+        done();
+      });
+  });
+
+  it('should filter by array of filepaths', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        filter: ['test.js']
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(Object.keys(files)).to.have.length(4);
+        expect(files['test.min.js']).to.be.an(Object);
+        done();
+      });
+  });
+
+  it('should not filter if odd filter is passed', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        filter: {}
+      }))
+      .build(function (err, files) {
+        expect(err).to.be.an(Error);
+        done();
+      });
+  });
+
+  it('should filter by function', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        filter: function (filepath) {
+          return require('path').extname(filepath) === '.js';
+        }
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(Object.keys(files)).to.have.length(5);
+        expect(files['test.min.js']).to.be.an(Object);
+        expect(files['dir/test.min.js']).to.be.an(Object);
+        done();
+      });
+  });
+
   it('should remove originals', function (done) {
     var build = new Metalsmith(FIXTURES)
       .use(uglify({
