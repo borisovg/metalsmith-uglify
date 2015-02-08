@@ -1,7 +1,10 @@
 # metalsmith-uglify
 
+[![io.js compatibility](https://img.shields.io/badge/io.js-compatible-brightgreen.svg?style=flat)](https://iojs.org/)
 [![NPM version](http://img.shields.io/npm/v/metalsmith-uglify.svg)](https://www.npmjs.org/package/metalsmith-uglify)
-[![Dependency Status](http://img.shields.io/gemnasium/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
+
+[![Dependency Status](http://img.shields.io/david/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
+[![Dev Dependency Status](http://img.shields.io/david/dev/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
 [![Code Climate](http://img.shields.io/codeclimate/github/ksmithut/metalsmith-uglify.svg)](https://codeclimate.com/github/ksmithut/metalsmith-uglify)
 [![Build Status](http://img.shields.io/travis/ksmithut/metalsmith-uglify.svg)](https://travis-ci.org/ksmithut/metalsmith-uglify)
 [![Coverage Status](http://img.shields.io/coveralls/ksmithut/metalsmith-uglify.svg)](https://coveralls.io/r/ksmithut/metalsmith-uglify)
