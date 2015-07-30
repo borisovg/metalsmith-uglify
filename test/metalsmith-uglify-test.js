@@ -154,4 +154,16 @@ describe('metalsmith-uglify', function () {
       });
   });
 
+  it('should build out sourcemaps', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        sourceMap: true
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        console.log(Object.keys(files));
+        done();
+      });
+  });
+
 });
