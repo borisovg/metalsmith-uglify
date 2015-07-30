@@ -1,8 +1,11 @@
 'use strict';
+/* jshint maxstatements: false */
+
+//var hoistThis = require('harmonize')();
 
 var uglify     = require('../');
 var path       = require('path');
-var expect     = require('expect.js');
+var expect     = require('chai').expect;
 var Metalsmith = require('metalsmith');
 
 var FIXTURES   = path.join(__dirname, 'fixtures');
@@ -14,9 +17,9 @@ describe('metalsmith-uglify', function () {
       .use(uglify())
       .build(function (err, files) {
         if (err) { return done(err); }
-        expect(files).to.be.an(Object);
-        expect(files['test.js']).to.be.an(Object);
-        expect(files['test.min.js']).to.be.an(Object);
+        expect(files).to.be.instanceof(Object);
+        expect(files['test.js']).to.be.instanceof(Object);
+        expect(files['test.min.js']).to.be.instanceof(Object);
         expect(files['test.js'].contents.length)
           .to.be.greaterThan(files['test.min.js'].contents.length);
         done();
@@ -31,7 +34,7 @@ describe('metalsmith-uglify', function () {
       .build(function (err, files) {
         if (err) { return done(err); }
         expect(Object.keys(files)).to.have.length(4);
-        expect(files['dir/test.min.js']).to.be.an(Object);
+        expect(files['dir/test.min.js']).to.be.instanceof(Object);
         done();
       });
   });
@@ -44,7 +47,7 @@ describe('metalsmith-uglify', function () {
       .build(function (err, files) {
         if (err) { return done(err); }
         expect(Object.keys(files)).to.have.length(4);
-        expect(files['test.min.js']).to.be.an(Object);
+        expect(files['test.min.js']).to.be.instanceof(Object);
         done();
       });
   });
@@ -55,7 +58,7 @@ describe('metalsmith-uglify', function () {
         filter: {}
       }))
       .build(function (err, files) {
-        expect(err).to.be.an(Error);
+        expect(err).to.be.instanceof(Error);
         done();
       });
   });
@@ -70,8 +73,8 @@ describe('metalsmith-uglify', function () {
       .build(function (err, files) {
         if (err) { return done(err); }
         expect(Object.keys(files)).to.have.length(5);
-        expect(files['test.min.js']).to.be.an(Object);
-        expect(files['dir/test.min.js']).to.be.an(Object);
+        expect(files['test.min.js']).to.be.instanceof(Object);
+        expect(files['dir/test.min.js']).to.be.instanceof(Object);
         done();
       });
   });
@@ -83,9 +86,9 @@ describe('metalsmith-uglify', function () {
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
-        expect(files).to.be.an(Object);
-        expect(files['test.js']).to.be(undefined);
-        expect(files['test.min.js']).to.be.an(Object);
+        expect(files).to.be.instanceof(Object);
+        expect(files['test.js']).to.be.equal(undefined);
+        expect(files['test.min.js']).to.be.instanceof(Object);
         done();
       });
   });
@@ -146,7 +149,7 @@ describe('metalsmith-uglify', function () {
         filter: '**/*.jsx'
       }))
       .build(function (err, files) {
-        expect(err).to.be.an(Error);
+        expect(err).to.be.instanceof(Error);
         done();
       });
   });
