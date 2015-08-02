@@ -161,7 +161,75 @@ describe('metalsmith-uglify', function () {
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
-        console.log(Object.keys(files));
+        expect(files).to.have.keys([
+          'err.jsx',
+          'test.js',
+          'dir/test.js',
+          'test.min.js.map',
+          'test.min.js',
+          'dir/test.min.js.map',
+          'dir/test.min.js'
+        ]);
+        done();
+      });
+  });
+
+  it('should use a function to make the sourcemap function', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        sourceMap: function (filepath) {
+          return filepath + '.js2.map';
+        }
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(files).to.have.keys([
+          'err.jsx',
+          'test.js',
+          'dir/test.js',
+          'test.min.js.js2.map',
+          'test.min.js',
+          'dir/test.min.js.js2.map',
+          'dir/test.min.js'
+        ]);
+        done();
+      });
+  });
+
+  it('should use tokenized string', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        sourceMap: 'maps/{{dir}}{{name}}.map'
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(files).to.have.keys([
+          'err.jsx',
+          'test.js',
+          'dir/test.js',
+          'maps/test.min.js.map',
+          'test.min.js',
+          'maps/dir/test.min.js.map',
+          'dir/test.min.js'
+        ]);
+        done();
+      });
+  });
+
+  it('should not do anything else is passed as sourcemap', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        sourceMap: {}
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(files).to.have.keys([
+          'err.jsx',
+          'test.js',
+          'dir/test.js',
+          'test.min.js',
+          'dir/test.min.js'
+        ]);
         done();
       });
   });
