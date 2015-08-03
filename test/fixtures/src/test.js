@@ -2,7 +2,7 @@
   // %'all'%
   var plugin = {
     init: function (selector) {
-      $(selector).doSomething();
+      console.log('loaded test.js');
     }
   };
   //! %'some'% %'all'%

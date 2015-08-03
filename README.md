@@ -20,10 +20,11 @@ followed the example of [terinjokes](https://github.com/terinjokes/) in his
 [gulp-uglify](https://github.com/terinjokes/gulp-uglify) plugin and made this
 plugin do only one thing: uglify.
 
-Concatenating and minifying all the .js files are not supported at the
-moment. For now, use
-[metalsmith-concat](https://www.npmjs.com/package/metalsmith-concat) to
-concatenate, then minify afterward.
+Concatenating and minifying all the .js files are supported, but source maps are
+buggy when doing this. These issues have been brought up with UglifyJS2 several
+times and has yet to be resolved. Let me know if [this issue](https://github.com/mishoo/UglifyJS2/issues/581)
+or others like it have been resolved, or if you have another way of solving the
+issue.
 
 ## Installation
 
@@ -91,6 +92,17 @@ It also takes in an object hash with options:
   If you pass a function, it will be called for each matching file with the path
   of the minified file as it's argument. You need to return the path to the
   source map file to generate.
+
+- **`options.concat`** (Boolean|String) Default: `false`
+
+  Whether or not to concatenate all of matching files into one file. Must either
+  be `false` or a string name of the path to save the concatenated file to.
+
+  Note: sourceMaps are buggy and probably won't work. The tests that I ran made
+  it seem like the source map was being generated differently than expected. It
+  seemed to only generate the source map for the first file that passed through.
+  There are several issues open on the [uglify-js repo](https://github.com/mishoo/UglifyJS2),
+  so I'll keep my eye out on any progress on this front.
 
 - **`options.output`** (Object) Default: `{}`
 

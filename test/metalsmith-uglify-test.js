@@ -243,6 +243,38 @@ describe('metalsmith-uglify', function () {
       });
   });
 
+  it('should concatentate all files', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        sourceMap: true,
+        concat: 'app.min.js'
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(files).to.have.keys([
+          'err.jsx',
+          'test.js',
+          'dir/test.js',
+          'app.min.js',
+          'app.min.js.map'
+        ]);
+        done();
+      });
+  });
+
+  it('should fail if invalid option is passed to metalsmith', function () {
+    var error;
+    try {
+      uglify({
+        concat: true
+      });
+    } catch (err) {
+      error = err;
+    } finally {
+      expect(error).to.be.instanceOf(Error);
+    }
+  });
+
 });
 
 function fileEquality(file, filepath) {
@@ -255,3 +287,7 @@ function fileEquality(file, filepath) {
   ), 'utf8');
   expect(contentsA).to.be.equal(contentsB);
 }
+
+// function writeFile(file, filepath) {
+//   fs.writeFileSync(path.join(__dirname, 'fixtures', 'sourcemap-contents', filepath), file.contents);
+// }
