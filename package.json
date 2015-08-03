@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-uglify",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "An uglify plugin for metalsmith",
   "main": "index.js",
   "scripts": {
