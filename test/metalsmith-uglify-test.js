@@ -1,8 +1,9 @@
 'use strict';
 /* jshint maxstatements: false */
+/* jshint maxlen: false */
+/* jshint unused: false */
 
-//var hoistThis = require('harmonize')();
-
+var fs         = require('fs');
 var uglify     = require('../');
 var path       = require('path');
 var expect     = require('chai').expect;
@@ -170,6 +171,10 @@ describe('metalsmith-uglify', function () {
           'dir/test.min.js.map',
           'dir/test.min.js'
         ]);
+        expect(files['test.min.js'].contents.toString())
+          .to.contain('//# sourceMappingURL=test.min.js.map');
+        fileEquality(files['test.min.js.map'], '1/test.min.js.map');
+        fileEquality(files['dir/test.min.js.map'], '1/dir/test.min.js.map');
         done();
       });
   });
@@ -192,6 +197,8 @@ describe('metalsmith-uglify', function () {
           'dir/test.min.js.js2.map',
           'dir/test.min.js'
         ]);
+        fileEquality(files['test.min.js.js2.map'], '2/test.min.js.js2.map');
+        fileEquality(files['dir/test.min.js.js2.map'], '2/dir/test.min.js.js2.map');
         done();
       });
   });
@@ -199,7 +206,7 @@ describe('metalsmith-uglify', function () {
   it('should use tokenized string', function (done) {
     var build = new Metalsmith(FIXTURES)
       .use(uglify({
-        sourceMap: 'maps/{{dir}}{{name}}.map'
+        sourceMap: 'maps/{{dir}}/{{name}}.map'
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
@@ -212,6 +219,8 @@ describe('metalsmith-uglify', function () {
           'maps/dir/test.min.js.map',
           'dir/test.min.js'
         ]);
+        fileEquality(files['maps/test.min.js.map'], '3/maps/test.min.js.map');
+        fileEquality(files['maps/dir/test.min.js.map'], '3/maps/dir/test.min.js.map');
         done();
       });
   });
@@ -235,3 +244,14 @@ describe('metalsmith-uglify', function () {
   });
 
 });
+
+function fileEquality(file, filepath) {
+  var contentsA = file.contents.toString();
+  var contentsB = fs.readFileSync(path.join(
+    __dirname,
+    'fixtures',
+    'sourcemap-contents',
+    filepath
+  ), 'utf8');
+  expect(contentsA).to.be.equal(contentsB);
+}

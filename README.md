@@ -20,12 +20,7 @@ followed the example of [terinjokes](https://github.com/terinjokes/) in his
 [gulp-uglify](https://github.com/terinjokes/gulp-uglify) plugin and made this
 plugin do only one thing: uglify.
 
-Currently, sourcemaps are not supported, but I plan on working that in the
-future if it's something that people use. Or even better, a PR would be happily
-accepted. If someone is super interested in taking over maintenance, I wouldn't
-mind passing on the reigns.
-
-Concatenating and minifying all the .js files is also not supported at the
+Concatenating and minifying all the .js files are not supported at the
 moment. For now, use
 [metalsmith-concat](https://www.npmjs.com/package/metalsmith-concat) to
 concatenate, then minify afterward.
@@ -77,6 +72,25 @@ It also takes in an object hash with options:
 - **`options.removeOriginal`** (Boolean) Default: `false`
 
   This will remove the original (unminified) file from the file tree.
+
+- **`options.sourceMap`** (Boolean|String|Function) Default: `false`
+
+  This indicates whether or not you wish to add a source map to the files. If
+  you indicate `true`, it will add an additional file to the output, which will
+  be named the name of the minified file, plug `.map`. So if you have a file
+  named `app.js`, it will be minified to `app.min.js` and the map file will be
+  named `app.min.js.map`.
+
+  If you pass a string, it will use that name, but you can also specify tokens
+  for dynamic path generation. So in the above example, if you had a file named
+  `js/app.js`, it would generate a file named `js/app.min.js`. If you passed
+  `'{{dir}}/{{name}}.map'` into the sourcemap options, it would generate the map
+  file at `js/app.min.js.map`. If you passed `'maps/{{name}}.map'`, it
+  would generate the file at `'maps/app.min.js.map'`.
+
+  If you pass a function, it will be called for each matching file with the path
+  of the minified file as it's argument. You need to return the path to the
+  source map file to generate.
 
 - **`options.output`** (Object) Default: `{}`
 
