@@ -40,7 +40,7 @@
     "arrify": "^1.0.0",
     "is-string": "^1.0.4",
     "minimatch": "^2.0.10",
-    "object-assign": "^3.0.0",
+    "object-assign": "^4.0.1",
     "uglify-js": "^2.4.24"
   }
 }

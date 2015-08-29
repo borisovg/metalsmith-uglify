@@ -53,9 +53,9 @@ It also takes in an object hash with options:
 - **`options.filter`** (String, Function, Array of Strings) Default `'**/*.js'`
 
   This is how you filter which files actually get included. You can use a glob
-  pattern like the default value, an array of relative filepaths, or a function.
-  The function takes in the filepath to the file. Return `true` if it should be
-  uglified, `false` if it shouldn't be included.
+  pattern like the default value, an array of relative filepaths or glob
+  paths,or a function. The function takes in the filepath to the file. Return
+  `true` if it should be uglified, `false` if it shouldn't be included.
 
 - **`options.preserveComments`** (Boolean, String, Function) Default: `false`
 

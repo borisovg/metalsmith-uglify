@@ -53,6 +53,20 @@ describe('metalsmith-uglify', function () {
       });
   });
 
+  it('should filter by array of filepaths', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        filter: ['test.js', 'dir/*.js']
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(Object.keys(files)).to.have.length(5);
+        expect(files['test.min.js']).to.be.instanceof(Object);
+        expect(files['dir/test.min.js']).to.be.instanceof(Object);
+        done();
+      });
+  });
+
   it('should not filter if odd filter is passed', function (done) {
     var build = new Metalsmith(FIXTURES)
       .use(uglify({
