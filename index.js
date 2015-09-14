@@ -15,6 +15,7 @@ module.exports = function metalsmithUglify(options) {
 
     var jsFiles = Object.keys(files)
       .filter(options.filter)
+      .sort(options.order)
       .map(function (filepath) {
         var contents = files[filepath].contents;
         if (options.removeOriginal) { delete files[filepath]; }

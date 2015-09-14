@@ -257,7 +257,7 @@ describe('metalsmith-uglify', function () {
       });
   });
 
-  it('should concatentate all files', function (done) {
+  it('should concatenate all files', function (done) {
     var build = new Metalsmith(FIXTURES)
       .use(uglify({
         sourceMap: true,
@@ -287,6 +287,28 @@ describe('metalsmith-uglify', function () {
     } finally {
       expect(error).to.be.instanceOf(Error);
     }
+  });
+
+  it('should order the files to be concatenate', function (done) {
+    var build = new Metalsmith(FIXTURES)
+      .use(uglify({
+        sourceMap: true,
+        concat: 'app.min.js',
+        order: ['dir/*']
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        expect(files).to.have.keys([
+          'err.jsx',
+          'test.js',
+          'dir/test.js',
+          'app.min.js',
+          'app.min.js.map'
+        ]);
+        expect(files['app.min.js'].contents.toString())
+          .to.be.equal(fs.readFileSync(path.join(FIXTURES, 'build-test', 'concat-order.js'), 'utf8'));
+        done();
+      });
   });
 
 });

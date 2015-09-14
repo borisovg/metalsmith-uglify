@@ -50,6 +50,12 @@ Metalsmith(__dirname)
 
 It also takes in an object hash with options:
 
+- **`options.order`** (String, Array of Strings) Default `'**'`
+
+  This is how you would order the files to be processed. This is mostly just
+  used with the concat option so you can control the order in which your files
+  will be concatenated.
+
 - **`options.filter`** (String, Function, Array of Strings) Default `'**/*.js'`
 
   This is how you filter which files actually get included. You can use a glob
