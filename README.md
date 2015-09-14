@@ -1,8 +1,6 @@
 # metalsmith-uglify
 
-[![io.js compatibility](https://img.shields.io/badge/io.js-compatible-brightgreen.svg?style=flat)](https://iojs.org/)
 [![NPM version](http://img.shields.io/npm/v/metalsmith-uglify.svg)](https://www.npmjs.org/package/metalsmith-uglify)
-
 [![Dependency Status](http://img.shields.io/david/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
 [![Dev Dependency Status](http://img.shields.io/david/dev/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
 [![Code Climate](http://img.shields.io/codeclimate/github/ksmithut/metalsmith-uglify.svg)](https://codeclimate.com/github/ksmithut/metalsmith-uglify)
@@ -38,9 +36,8 @@ By default, it takes all of your javascript files, and produces a `.min.js`
 version of it in the same directory.
 
 ```javascript
-var Metalsmith = require('metalsmith')
-  , uglify     = require('metalsmith-uglify')
-  ;
+var Metalsmith = require('metalsmith');
+var uglify     = require('metalsmith-uglify');
 
 Metalsmith(__dirname)
   .use(uglify())
