@@ -25,7 +25,7 @@ module.exports = function metalsmithUglify(options) {
         };
       });
 
-    if (options.concat) { jsFiles = [jsFiles]; }
+    if (options.concat && jsFiles.length) { jsFiles = [jsFiles]; }
 
     jsFiles.forEach(function (file) {
       var opts = assign({}, options);
