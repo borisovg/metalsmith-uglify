@@ -187,8 +187,8 @@ describe('metalsmith-uglify', function () {
         ]);
         expect(files['test.min.js'].contents.toString())
           .to.contain('//# sourceMappingURL=test.min.js.map');
-        fileEquality(files['test.min.js.map'], '1/test.min.js.map');
-        fileEquality(files['dir/test.min.js.map'], '1/dir/test.min.js.map');
+        fileEquality(files['test.min.js.map'], '1/test.min.js.map', true);
+        fileEquality(files['dir/test.min.js.map'], '1/dir/test.min.js.map', true);
         done();
       });
   });
@@ -211,8 +211,8 @@ describe('metalsmith-uglify', function () {
           'dir/test.min.js.js2.map',
           'dir/test.min.js'
         ]);
-        fileEquality(files['test.min.js.js2.map'], '2/test.min.js.js2.map');
-        fileEquality(files['dir/test.min.js.js2.map'], '2/dir/test.min.js.js2.map');
+        fileEquality(files['test.min.js.js2.map'], '2/test.min.js.js2.map', true);
+        fileEquality(files['dir/test.min.js.js2.map'], '2/dir/test.min.js.js2.map', true);
         done();
       });
   });
@@ -233,8 +233,8 @@ describe('metalsmith-uglify', function () {
           'maps/dir/test.min.js.map',
           'dir/test.min.js'
         ]);
-        fileEquality(files['maps/test.min.js.map'], '3/maps/test.min.js.map');
-        fileEquality(files['maps/dir/test.min.js.map'], '3/maps/dir/test.min.js.map');
+        fileEquality(files['maps/test.min.js.map'], '3/maps/test.min.js.map', true);
+        fileEquality(files['maps/dir/test.min.js.map'], '3/maps/dir/test.min.js.map', true);
         done();
       });
   });
@@ -313,7 +313,7 @@ describe('metalsmith-uglify', function () {
 
 });
 
-function fileEquality(file, filepath) {
+function fileEquality(file, filepath, isJson) {
   var contentsA = file.contents.toString();
   var contentsB = fs.readFileSync(path.join(
     __dirname,
@@ -321,6 +321,9 @@ function fileEquality(file, filepath) {
     'sourcemap-contents',
     filepath
   ), 'utf8');
+  if (isJson) {
+    return expect(JSON.parse(contentsA)).to.be.eql(JSON.parse(contentsB))
+  }
   expect(contentsA).to.be.equal(contentsB);
 }
 

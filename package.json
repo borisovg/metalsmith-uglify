@@ -26,21 +26,21 @@
     "url": "https://github.com/ksmithut/metalsmith-uglify/issues"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
-    "codeclimate-test-reporter": "^0.1.0",
+    "chai": "^3.5.0",
+    "codeclimate-test-reporter": "^0.3.1",
     "expect.js": "^0.3.1",
-    "istanbul": "^0.3.17",
-    "jshint": "^2.8.0",
-    "jshint-stylish": "^2.0.1",
-    "metalsmith": "^2.0.1",
-    "mocha": "^2.2.5",
-    "mocha-lcov-reporter": "0.0.2"
+    "istanbul": "^0.4.3",
+    "jshint": "^2.9.1",
+    "jshint-stylish": "^2.1.0",
+    "metalsmith": "^2.1.0",
+    "mocha": "^2.4.5",
+    "mocha-lcov-reporter": "^1.2.0"
   },
   "dependencies": {
-    "arrify": "^1.0.0",
+    "arrify": "^1.0.1",
     "is-string": "^1.0.4",
-    "minimatch": "^2.0.10",
+    "minimatch": "^3.0.0",
     "object-assign": "^4.0.1",
-    "uglify-js": "^2.4.24"
+    "uglify-js": "^2.6.2"
   }
 }
