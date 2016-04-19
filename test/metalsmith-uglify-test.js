@@ -5,16 +5,23 @@
 
 var fs         = require('fs');
 var uglify     = require('../');
-var path       = require('path');
+var path       = require('upath');
 var expect     = require('chai').expect;
 var Metalsmith = require('metalsmith');
 
+var normalizePaths = require('./normalize-paths');
+
 var FIXTURES   = path.join(__dirname, 'fixtures');
+
+function getMetalsmith() {
+  return new Metalsmith(FIXTURES)
+      .use(normalizePaths());
+}
 
 describe('metalsmith-uglify', function () {
 
   it('should uglify all .js files', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify())
       .build(function (err, files) {
         if (err) { return done(err); }
@@ -28,7 +35,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should filter by glob', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: 'dir/**/*.js'
       }))
@@ -41,7 +48,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should filter by array of filepaths', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: ['test.js']
       }))
@@ -54,7 +61,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should filter by array of filepaths', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: ['test.js', 'dir/*.js']
       }))
@@ -68,7 +75,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should not filter if odd filter is passed', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: {}
       }))
@@ -79,10 +86,10 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should filter by function', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: function (filepath) {
-          return require('path').extname(filepath) === '.js';
+          return require('upath').extname(filepath) === '.js';
         }
       }))
       .build(function (err, files) {
@@ -95,7 +102,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should remove originals', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         removeOriginal: true
       }))
@@ -109,7 +116,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should preserve all comments', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         preserveComments: 'all'
       }))
@@ -125,7 +132,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should preserve some comments', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         preserveComments: 'some'
       }))
@@ -141,7 +148,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should preserve contents by function', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         preserveComments: function (node, comment) {
           return comment.value.indexOf('custom') !== -1;
@@ -159,7 +166,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should catch the error gracefully', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: '**/*.jsx'
       }))
@@ -170,7 +177,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should build out sourcemaps', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: true
       }))
@@ -194,7 +201,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should use a function to make the sourcemap function', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: function (filepath) {
           return filepath + '.js2.map';
@@ -218,7 +225,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should use tokenized string', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: 'maps/{{dir}}/{{name}}.map'
       }))
@@ -240,7 +247,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should not do anything else is passed as sourcemap', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: {}
       }))
@@ -258,7 +265,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should concatenate all files', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: true,
         concat: 'app.min.js'
@@ -289,8 +296,8 @@ describe('metalsmith-uglify', function () {
     }
   });
 
-  it('should order the files to be concatenate', function (done) {
-    var build = new Metalsmith(FIXTURES)
+  it('should order the files to be concatenated', function (done) {
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: true,
         concat: 'app.min.js',
