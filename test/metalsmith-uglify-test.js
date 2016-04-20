@@ -5,16 +5,23 @@
 
 var fs         = require('fs');
 var uglify     = require('../');
-var path       = require('path');
+var path       = require('upath');
 var expect     = require('chai').expect;
 var Metalsmith = require('metalsmith');
 
+var normalizePaths = require('./normalize-paths');
+
 var FIXTURES   = path.join(__dirname, 'fixtures');
+
+function getMetalsmith() {
+  return new Metalsmith(FIXTURES)
+      .use(normalizePaths());
+}
 
 describe('metalsmith-uglify', function () {
 
   it('should uglify all .js files', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify())
       .build(function (err, files) {
         if (err) { return done(err); }
@@ -28,39 +35,63 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should filter by glob', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: 'dir/**/*.js'
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
-        expect(Object.keys(files)).to.have.length(4);
+        expect(Object.keys(files)).to.have.length(8);
         expect(files['dir/test.min.js']).to.be.instanceof(Object);
         done();
       });
   });
 
-  it('should filter by array of filepaths', function (done) {
-    var build = new Metalsmith(FIXTURES)
+  it('should filter by single-item array of filepaths', function (done) {
+    var build = getMetalsmith()
       .use(uglify({
         filter: ['test.js']
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
-        expect(Object.keys(files)).to.have.length(4);
+        expect(files).to.have.keys([
+          // Uglified files
+          'test.js',
+          'test.min.js',
+
+          // Un-uglified files
+          'dir/test.js',
+          'err.jsx',
+          'dir/testb.js',
+          'dir/testz.js',
+        ]);
+        expect(Object.keys(files)).to.have.length(6);
         expect(files['test.min.js']).to.be.instanceof(Object);
         done();
       });
   });
 
   it('should filter by array of filepaths', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: ['test.js', 'dir/*.js']
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
-        expect(Object.keys(files)).to.have.length(5);
+        expect(files).to.have.keys([
+          // Uglified files
+          'dir/test.js',
+          'dir/test.min.js',
+          'dir/testb.js',
+          'dir/testb.min.js',
+          'dir/testz.js',
+          'dir/testz.min.js',
+          'test.js',
+          'test.min.js',
+          // Un-uglified files
+          'err.jsx',
+        ]);
+        expect(Object.keys(files)).to.have.length(9);
         expect(files['test.min.js']).to.be.instanceof(Object);
         expect(files['dir/test.min.js']).to.be.instanceof(Object);
         done();
@@ -68,7 +99,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should not filter if odd filter is passed', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: {}
       }))
@@ -79,15 +110,15 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should filter by function', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: function (filepath) {
-          return require('path').extname(filepath) === '.js';
+          return require('upath').extname(filepath) === '.js';
         }
       }))
       .build(function (err, files) {
         if (err) { return done(err); }
-        expect(Object.keys(files)).to.have.length(5);
+        expect(Object.keys(files)).to.have.length(9);
         expect(files['test.min.js']).to.be.instanceof(Object);
         expect(files['dir/test.min.js']).to.be.instanceof(Object);
         done();
@@ -95,7 +126,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should remove originals', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         removeOriginal: true
       }))
@@ -109,7 +140,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should preserve all comments', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         preserveComments: 'all'
       }))
@@ -125,7 +156,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should preserve some comments', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         preserveComments: 'some'
       }))
@@ -141,7 +172,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should preserve contents by function', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         preserveComments: function (node, comment) {
           return comment.value.indexOf('custom') !== -1;
@@ -159,7 +190,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should catch the error gracefully', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         filter: '**/*.jsx'
       }))
@@ -170,7 +201,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should build out sourcemaps', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: true
       }))
@@ -179,11 +210,17 @@ describe('metalsmith-uglify', function () {
         expect(files).to.have.keys([
           'err.jsx',
           'test.js',
-          'dir/test.js',
           'test.min.js.map',
           'test.min.js',
+          'dir/test.js',
           'dir/test.min.js.map',
-          'dir/test.min.js'
+          'dir/test.min.js',
+          'dir/testb.js',
+          'dir/testb.min.js.map',
+          'dir/testb.min.js',
+          'dir/testz.js',
+          'dir/testz.min.js.map',
+          'dir/testz.min.js'
         ]);
         expect(files['test.min.js'].contents.toString())
           .to.contain('//# sourceMappingURL=test.min.js.map');
@@ -194,7 +231,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should use a function to make the sourcemap function', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: function (filepath) {
           return filepath + '.js2.map';
@@ -205,11 +242,17 @@ describe('metalsmith-uglify', function () {
         expect(files).to.have.keys([
           'err.jsx',
           'test.js',
-          'dir/test.js',
           'test.min.js.js2.map',
           'test.min.js',
+          'dir/test.js',
           'dir/test.min.js.js2.map',
-          'dir/test.min.js'
+          'dir/test.min.js',
+          'dir/testb.js',
+          'dir/testb.min.js.js2.map',
+          'dir/testb.min.js',
+          'dir/testz.js',
+          'dir/testz.min.js.js2.map',
+          'dir/testz.min.js'
         ]);
         fileEquality(files['test.min.js.js2.map'], '2/test.min.js.js2.map', true);
         fileEquality(files['dir/test.min.js.js2.map'], '2/dir/test.min.js.js2.map', true);
@@ -218,7 +261,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should use tokenized string', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: 'maps/{{dir}}/{{name}}.map'
       }))
@@ -227,11 +270,17 @@ describe('metalsmith-uglify', function () {
         expect(files).to.have.keys([
           'err.jsx',
           'test.js',
-          'dir/test.js',
           'maps/test.min.js.map',
           'test.min.js',
+          'dir/test.js',
+          'dir/test.min.js',
           'maps/dir/test.min.js.map',
-          'dir/test.min.js'
+          'dir/testb.js',
+          'dir/testb.min.js',
+          'maps/dir/testb.min.js.map',
+          'dir/testz.js',
+          'dir/testz.min.js',
+          'maps/dir/testz.min.js.map',
         ]);
         fileEquality(files['maps/test.min.js.map'], '3/maps/test.min.js.map', true);
         fileEquality(files['maps/dir/test.min.js.map'], '3/maps/dir/test.min.js.map', true);
@@ -240,7 +289,7 @@ describe('metalsmith-uglify', function () {
   });
 
   it('should not do anything else is passed as sourcemap', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: {}
       }))
@@ -249,16 +298,20 @@ describe('metalsmith-uglify', function () {
         expect(files).to.have.keys([
           'err.jsx',
           'test.js',
-          'dir/test.js',
           'test.min.js',
-          'dir/test.min.js'
+          'dir/test.js',
+          'dir/test.min.js',
+          'dir/testb.js',
+          'dir/testb.min.js',
+          'dir/testz.js',
+          'dir/testz.min.js',
         ]);
         done();
       });
   });
 
   it('should concatenate all files', function (done) {
-    var build = new Metalsmith(FIXTURES)
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: true,
         concat: 'app.min.js'
@@ -269,6 +322,8 @@ describe('metalsmith-uglify', function () {
           'err.jsx',
           'test.js',
           'dir/test.js',
+          'dir/testb.js',
+          'dir/testz.js',
           'app.min.js',
           'app.min.js.map'
         ]);
@@ -289,8 +344,8 @@ describe('metalsmith-uglify', function () {
     }
   });
 
-  it('should order the files to be concatenate', function (done) {
-    var build = new Metalsmith(FIXTURES)
+  it('should order the files to be concatenated', function (done) {
+    var build = getMetalsmith()
       .use(uglify({
         sourceMap: true,
         concat: 'app.min.js',
@@ -302,6 +357,8 @@ describe('metalsmith-uglify', function () {
           'err.jsx',
           'test.js',
           'dir/test.js',
+          'dir/testb.js',
+          'dir/testz.js',
           'app.min.js',
           'app.min.js.map'
         ]);
