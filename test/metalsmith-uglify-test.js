@@ -368,6 +368,44 @@ describe('metalsmith-uglify', function () {
       });
   });
 
+  it('should allow for custom filename templates', function (done) {
+    var build = getMetalsmith()
+      .use(uglify({
+        nameTemplate: '[name].[ext]'
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        // console.log(files)
+        expect(files).to.have.keys([
+          'dir/test.js',
+          'dir/testb.js',
+          'dir/testz.js',
+          'err.jsx',
+          'test.js'
+        ])
+        done();
+      })
+  })
+
+  it('should ignore unsupported tokens', function (done) {
+    var build = getMetalsmith()
+      .use(uglify({
+        nameTemplate: '[name][foo].[ext]'
+      }))
+      .build(function (err, files) {
+        if (err) { return done(err); }
+        // console.log(files)
+        expect(files).to.have.keys([
+          'dir/test.js',
+          'dir/testb.js',
+          'dir/testz.js',
+          'err.jsx',
+          'test.js'
+        ])
+        done();
+      })
+  })
+
 });
 
 function fileEquality(file, filepath, isJson) {

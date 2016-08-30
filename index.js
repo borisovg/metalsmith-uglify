@@ -29,7 +29,7 @@ module.exports = function metalsmithUglify(options) {
 
     jsFiles.forEach(function (file) {
       var opts = assign({}, options);
-      var minPath = options.getMinPath(file.path);
+      var minPath = options.getMinPath(file.path, options.nameTemplate);
       var srcMapPath = options.sourceMap(minPath);
 
       if (srcMapPath) {

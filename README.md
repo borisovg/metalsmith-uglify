@@ -47,6 +47,15 @@ Metalsmith(__dirname)
 
 It also takes in an object hash with options:
 
+- **`options.nameTemplate`** (String) Default `'[name].min.[ext]'`
+
+  This allows you to rename the file that comes out the other end minified. It
+  is suggested that you use another metalsmith plugin to do this, but a small
+  feature set supporting this will be maintained. Tokens are surrounded by `[]`
+  square brackets. Available tokens include `name` (The filename minus the
+  extension) and `ext` (The file extension). Additional tokens can be made
+  available upon request.
+
 - **`options.order`** (String, Array of Strings) Default `'**'`
 
   This is how you would order the files to be processed. This is mostly just
