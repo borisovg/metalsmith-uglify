@@ -54,7 +54,8 @@ It also takes in an object hash with options:
   feature set supporting this will be maintained. Tokens are surrounded by `[]`
   square brackets. Available tokens include `name` (The filename minus the
   extension) and `ext` (The file extension). Additional tokens can be made
-  available upon request.
+  available upon request. If you use the value `[name].[ext]`, it will replace
+  the file in the metalsmith output.
 
 - **`options.order`** (String, Array of Strings) Default `'**'`
 
