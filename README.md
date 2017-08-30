@@ -1,19 +1,5 @@
 # metalsmith-uglify
 
-[![NPM version](http://img.shields.io/npm/v/metalsmith-uglify.svg)](https://www.npmjs.org/package/metalsmith-uglify)
-[![Dependency Status](http://img.shields.io/david/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
-[![Dev Dependency Status](http://img.shields.io/david/dev/ksmithut/metalsmith-uglify.svg)](https://gemnasium.com/ksmithut/metalsmith-uglify)
-[![Code Climate](http://img.shields.io/codeclimate/github/ksmithut/metalsmith-uglify.svg)](https://codeclimate.com/github/ksmithut/metalsmith-uglify)
-[![Build Status](http://img.shields.io/travis/ksmithut/metalsmith-uglify.svg)](https://travis-ci.org/ksmithut/metalsmith-uglify)
-[![Coverage Status](http://img.shields.io/coveralls/ksmithut/metalsmith-uglify.svg)](https://coveralls.io/r/ksmithut/metalsmith-uglify)
-
-**Looking for another maintainer. I have been cleaning up my packages and no
-longer have the energy to maintain this package. If you are interested in
-taking over, please reach out. Otherwise, eventually I will have this repo
-removed. I haven't used Metalsmith in years, nor uglify, and I just can't keep
-up with all of my other responsibilities. Let me know if you'd like to take over
-in the issues.**
-
 An UglifyJS plugin for metalsmith
 
 ## 1.x
@@ -150,5 +136,4 @@ to be filled and filled it.
 ## Contributing
 
 Pull Requests are welcome! I would just ask that additional tests are written
-for each feature added. If you're interested in maintaining the project, let me
-know, and we'll get everything switched over.
+for each feature added.
