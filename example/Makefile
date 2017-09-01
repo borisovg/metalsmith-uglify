@@ -10,7 +10,7 @@ clean:
 ## example:  build example page (default target)
 .PHONY: example
 example: node_modules
-	DEBUG=metalsmith-uglify:*,-metalsmith-uglify:call_uglify node build.js \
+	DEBUG=metalsmith-uglify:info:* node build.js \
 		&& ./node_modules/.bin/opn ./public/index.html
 
 .PHONY: help

@@ -10,7 +10,7 @@ clean:
 ## test:   run the tests (default target)
 .PHONY: test
 test: node_modules
-	DEBUG=metalsmith-uglify:*,-metalsmith-uglify:call_uglify \
+	DEBUG=metalsmith-uglify:info:* \
 	./node_modules/.bin/istanbul cover \
 		-i index.js \
 		--root ../ \

@@ -83,6 +83,13 @@ Inspect files in `example/` for more information.
 ## Debug Logging
 
 Set the `DEBUG` variable to see what the plugin is doing.
+
+If you are troubleshooting the plugin itself then the following should be enough:
+```
+DEBUG=metalsmith-uglify:info:* node build.js
+```
+
+If you think the problem is actually related to something UglifyJS does then you can get more detail:
 ```
 DEBUG=metalsmith-uglify:* node build.js
 ```

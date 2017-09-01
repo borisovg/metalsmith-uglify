@@ -11,10 +11,10 @@
 
 var debug = require('debug');
 
-var logCallUglify = debug('metalsmith-uglify:call_uglify');
-var logGetRoot = debug('metalsmith-uglify:get_root');
-var logMain = debug('metalsmith-uglify:main');
-var logMinify = debug('metalsmith-uglify:minify');
+var logGetRoot = debug('metalsmith-uglify:info:get_root');
+var logMain = debug('metalsmith-uglify:info:main');
+var logMinify = debug('metalsmith-uglify:info:minify');
+var logMinifyDebug = debug('metalsmith-uglify:debug:minify');
 var jsRe = new RegExp('.js$');
 var jsMinRe = new RegExp('.min.js$');
 var uglify;
