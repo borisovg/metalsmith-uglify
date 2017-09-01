@@ -225,4 +225,19 @@ describe('index.js', function () {
             done();
         });
     });
+
+    it('handles errors in a useful way', function () {
+        var files = {
+            'broken.js': {
+                contents: new Buffer('function spanner () {')
+            }
+        };
+        var plugin = subject();
+
+        try {
+            plugin(files);
+        } catch (e) {
+            expect(e.message.indexOf('broken.js') !== -1);
+        }
+    });
 });

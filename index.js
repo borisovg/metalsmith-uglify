@@ -75,7 +75,14 @@ function get_min_path (root, names, opts) {
 function call_uglify (src, opts) {
     var result = uglify.minify(src, opts);
 
-    logCallUglify('Uglify command: uglify.minify(%O, %O)', src, opts);
+    if (result.error) {
+        logMinify('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
+        logMinify('UglifyJS Error: %O', result.error);
+        throw(new Error(require('util').format('UglifyJS Error: %j', result.error)));
+    }
+
+    logMinifyDebug('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
+    logMinify('Result: %0', result);
 
     return result;
 }
@@ -111,8 +118,6 @@ function minify (names, files, opts) {
 
     files[pathMin] = { contents: new Buffer(result.code) };
 
-    logMinify('Result: %0', result);
-
     if (opts.removeOriginal && !opts.sameName) {
         for (i = 0; i < names.length; i += 1) {
             delete files[names[i]];
@@ -147,7 +152,7 @@ function plugin (opts) {
         var i;
 
         logMain('JS files: %O', jsFiles);
-        logMain('Uglify start');
+        logMain('Minify start');
 
         if (opts.concat) {
             minify(jsFiles, files, opts);
@@ -157,7 +162,7 @@ function plugin (opts) {
             }
         }
 
-        logMain('Uglify end');
+        logMain('Minify end');
 
         done();
     };
