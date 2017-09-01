@@ -18,7 +18,7 @@ var uglify = require('../index.js');
 
 var log = debug('metalsmith-uglify:info:example');
 
-log('Build started');
+log('Build Started');
 
 metalsmith(__dirname)
     .metadata({
@@ -43,9 +43,9 @@ metalsmith(__dirname)
     .use(htmlMinifier())
     .build(function (err) {
         if (err) {
-            log('Build failed: %O', err);
+            log('Build Failed: %O', err);
 
         } else {
-            log('Build finished');
+            log('Build Finished');
         }
     });

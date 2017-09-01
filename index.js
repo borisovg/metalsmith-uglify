@@ -151,8 +151,8 @@ function plugin (opts) {
         var jsFiles = get_js_files(files, opts);
         var i;
 
-        logMain('JS files: %O', jsFiles);
-        logMain('Minify start');
+        logMain('JS Files: %O', jsFiles);
+        logMain('Processing Started');
 
         if (opts.concat) {
             minify(jsFiles, files, opts);
@@ -162,7 +162,7 @@ function plugin (opts) {
             }
         }
 
-        logMain('Minify end');
+        logMain('Processing Finished');
 
         done();
     };
