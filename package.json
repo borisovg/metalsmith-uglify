@@ -1,14 +1,10 @@
 {
   "name": "metalsmith-uglify",
-  "version": "1.5.3",
-  "description": "An uglify plugin for metalsmith",
+  "version": "2.0.0",
+  "description": "An uglify plugin for Metalsmith.",
   "main": "index.js",
   "scripts": {
-    "jshint": "jshint --reporter node_modules/jshint-stylish index.js lib/**",
-    "check-cov": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "test": "node --harmony ./node_modules/.bin/istanbul cover _mocha",
-    "posttest": "npm run check-cov; npm run jshint;",
-    "codeclimate": "cat ./coverage/lcov.info | codeclimate-test-reporter"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
@@ -20,28 +16,23 @@
     "uglifyjs",
     "minification"
   ],
-  "author": "ksmithut",
-  "license": "MIT",
+  "author": {
+      "name": "George Borisov",
+      "url": "https://github.com/borisovg"
+  },
+  "contributors": [
+    {
+      "name": "Keith Smith",
+      "url": "https://github.com/ksmithut"
+    }
+  ],
+  "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/borisovg/metalsmith-uglify/issues"
   },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "codeclimate-test-reporter": "^0.3.3",
-    "expect.js": "^0.3.1",
-    "istanbul": "^0.4.5",
-    "jshint": "^2.9.3",
-    "jshint-stylish": "^2.2.1",
-    "metalsmith": "^2.2.0",
-    "mocha": "^3.0.2",
-    "mocha-lcov-reporter": "^1.2.0"
-  },
   "dependencies": {
-    "arrify": "^1.0.1",
-    "is-string": "^1.0.4",
-    "minimatch": "^3.0.3",
-    "object-assign": "^4.1.0",
-    "uglify-js": "^2.7.3",
-    "upath": "^0.2.0"
+    "debug": "^3.0.1",
+    "uglify-es": "^3.0.28",
+    "uglify-js": "^3.0.28"
   }
 }

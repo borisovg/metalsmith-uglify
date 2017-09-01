@@ -1,2 +1,0 @@
-!function(n){var i={init:function(n){console.log("loaded dir/test.js")}};n(function(){i.init()})}(jQuery),function(n){var i={init:function(n){console.log("loaded dir/testb.js")}};n(function(){i.init()})}(jQuery),function(n){var i={init:function(n){console.log("loaded dir/testz.js")}};n(function(){i.init()})}(jQuery),function(n){var i={init:function(n){console.log("loaded test.js")}};n(function(){i.init()})}(jQuery);
-//# sourceMappingURL=app.min.js.map
