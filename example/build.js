@@ -16,7 +16,7 @@ var metalsmith = require('metalsmith');
 // in real life require('metalsmith-inline-css')
 var uglify = require('../index.js');
 
-var log = debug('metalsmith-uglify:example');
+var log = debug('metalsmith-uglify:info:example');
 
 log('Build started');
 
