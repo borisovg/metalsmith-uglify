@@ -43,7 +43,7 @@ metalsmith(__dirname)
     .use(htmlMinifier())
     .build(function (err) {
         if (err) {
-            log('Build Failed: %O', err);
+            console.error('Build Failed:', err);
 
         } else {
             log('Build Finished');

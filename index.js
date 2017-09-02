@@ -11,10 +11,10 @@
 
 var debug = require('debug');
 
-var logGetRoot = debug('metalsmith-uglify:info:get_root');
+var logCallUglify = debug('metalsmith-uglify:info:call_uglify');
+var logCallUglifyDebug = debug('metalsmith-uglify:debug:call_uglify');
 var logMain = debug('metalsmith-uglify:info:main');
 var logMinify = debug('metalsmith-uglify:info:minify');
-var logMinifyDebug = debug('metalsmith-uglify:debug:minify');
 var jsRe = new RegExp('.js$');
 var jsMinRe = new RegExp('.min.js$');
 var uglify;
@@ -33,8 +33,6 @@ function get_root (names, opts) {
     if (root && root.substr(-1) !== '/') {
         root += '/';
     }
-
-    logGetRoot('Root: %s', root);
 
     return root;
 }
@@ -76,13 +74,13 @@ function call_uglify (src, opts) {
     var result = uglify.minify(src, opts);
 
     if (result.error) {
-        logMinify('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
-        logMinify('UglifyJS Error: %O', result.error);
+        logCallUglify('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
+        logCallUglify('UglifyJS Error: %O', result.error);
         throw(new Error(require('util').format('UglifyJS Error: %j', result.error)));
     }
 
-    logMinifyDebug('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
-    logMinify('Result: %0', result);
+    logCallUglifyDebug('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
+    logCallUglify('Result: %O', result);
 
     return result;
 }
@@ -143,14 +141,13 @@ function plugin (opts) {
         opts.uglify.sourceMap.includeSources = true;
     }
 
-    logMain('Options: %O', opts);
-
     uglify = require((opts.es) ? 'uglify-es' : 'uglify-js');
 
-    return function (files, metalsmith, done) {
+    return function main (files, metalsmith, done) {
         var jsFiles = get_js_files(files, opts);
         var i;
 
+        logMain('Options: %O', opts);
         logMain('JS Files: %O', jsFiles);
         logMain('Processing Started');
 
