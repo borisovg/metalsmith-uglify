@@ -14,13 +14,13 @@ clean:
 .PHONY: test
 test: node_modules
 	DEBUG=metalsmith-uglify:info:* \
-	./node_modules/.bin/nyc \
-		--cwd ../ \
-		--exclude tests/** \
-		--reporter=html \
-        --reporter=text \
-		--temp-directory ./tests/.nyc_output \
-		node_modules/.bin/mocha index.spec.js
+		  ./node_modules/.bin/nyc \
+		  --cwd ../ \
+		  --exclude tests/** \
+		  --reporter=html \
+		  --reporter=text \
+		  --temp-directory ./tests/.nyc_output \
+		  node_modules/.bin/mocha index.spec.js
 
 .PHONY: help
 help:
