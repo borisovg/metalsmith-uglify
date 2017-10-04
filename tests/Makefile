@@ -1,5 +1,7 @@
 all: test
 
+LCOV = coverage/coverage.lcov
+
 ## clean:  delete NPM packages and generated files
 .PHONY: clean
 clean:
@@ -13,14 +15,23 @@ clean:
 ## test:   run the tests (default target)
 .PHONY: test
 test: node_modules
-	DEBUG=metalsmith-uglify:info:* \
-		  ./node_modules/.bin/nyc \
+	DEBUG=metalsmith-uglify:info:* ./node_modules/.bin/nyc \
 		  --cwd ../ \
 		  --exclude tests/** \
 		  --reporter=html \
 		  --reporter=text \
 		  --temp-directory ./tests/.nyc_output \
 		  node_modules/.bin/mocha index.spec.js
+
+.PHONY: coverage
+coverage:
+	./node_modules/.bin/nyc report \
+		--cwd ../ \
+		--temp-directory ./tests/.nyc_output \
+		--reporter=text-lcov \
+		> $(LCOV)
+	./node_modules/.bin/codecov \
+		-f $(LCOV)
 
 .PHONY: help
 help:

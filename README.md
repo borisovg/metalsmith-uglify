@@ -1,3 +1,6 @@
+[![Build Status](https://img.shields.io/travis/borisovg/metalsmith-uglify/master.svg?style=flat-square)](https://travis-ci.org/borisovg/metalsmith-uglify/)
+[![Coverage Status](https://img.shields.io/codecov/c/github/borisovg/metalsmith-uglify/master.svg?style=flat-square)](https://codecov.io/gh/borisovg/metalsmith-uglify/)
+
 # metalsmith-uglify
 
 This is an [UglifyJS](http://lisperator.net/uglifyjs/) plugin for [Metalsmith](http://www.metalsmith.io/) and is a successor to the original plugin written by [Keith Smith](https://github.com/ksmithut).
