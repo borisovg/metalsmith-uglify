@@ -17,6 +17,7 @@ function make_files () {
         'js1/foo.js': 'var foo = "foo"; console.log(foo);',
         'js1/bar.js': 'var bar = "bar"; console.log(bar);',
         'js2/baz.js': 'var baz = "baz"; console.log(baz);',
+        'other.min.js': 'var other = "other"; console.log(other);',
     };
     var files = {
         // tests that non HTML / CSS file is ignored
@@ -75,7 +76,7 @@ describe('index.js', function () {
         });
     });
 
-    it('respects options.root', function (done) {
+    it('filter out everything', function (done) {
         var files = make_files();
         var plugin = subject({
             concat: {},
@@ -119,6 +120,37 @@ describe('index.js', function () {
             expect(map.sourcesContent.length).to.equal(3);
 
             ['js1/foo', 'js1/bar', 'js2/baz'].forEach(function (base, idx) {
+                var name = base + '.js';
+                expect(map.sources[idx]).to.equal(name);
+                expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
+            });
+
+            done();
+        });
+    });
+
+    it('concatenates files (overwrite default filter)', function (done) {
+        var files = make_files();
+        var plugin = subject({
+            concat: {},
+            filter: function() {
+                return true;
+            }
+        });
+
+        plugin(files, undefined, function () {
+            expect(typeof files['scripts.min.js']).to.equal('object');
+            expect(typeof files['scripts.min.js.map']).to.equal('object');
+            expect(files['js1/foo.min.js']).to.equal(undefined);
+            expect(files['js1/foo.min.js.map']).to.equal(undefined);
+
+            var map = JSON.parse(files['scripts.min.js.map'].contents.toString());
+
+            expect(map.file).to.equal('scripts.min.js');
+            expect(map.sources.length).to.equal(4);
+            expect(map.sourcesContent.length).to.equal(4);
+
+            ['other.min', 'js1/foo', 'js1/bar', 'js2/baz'].forEach(function (base, idx) {
                 var name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);

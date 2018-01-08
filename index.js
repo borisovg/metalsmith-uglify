@@ -41,13 +41,16 @@ function get_js_files (files, opts) {
     var root;
 
     var list = Object.keys(files).filter(function (name) {
-        return (name.match(jsRe) && !name.match(jsMinRe));
+        return name.match(jsRe);
     });
 
     if (opts.filter) {
         list = list.filter(opts.filter);
 
     } else {
+        list = list.filter(function (name) {
+            return !name.match(jsMinRe);
+        });
         root = get_root([], opts);
 
         if (root) {
