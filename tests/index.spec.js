@@ -12,13 +12,14 @@
 var expect = require('chai').expect;
 var subject = require('../index.js');
 
+var contents = {
+    'js1/foo.js': 'var foo = "foo"; console.log(foo);',
+    'js1/bar.js': 'var bar = "bar"; console.log(bar);',
+    'js2/baz.js': 'var baz = "baz"; console.log(baz);',
+    'js2/other.min.js': 'var other = "other"; console.log(other);'
+};
+
 function make_files () {
-    var contents = {
-        'js1/foo.js': 'var foo = "foo"; console.log(foo);',
-        'js1/bar.js': 'var bar = "bar"; console.log(bar);',
-        'js2/baz.js': 'var baz = "baz"; console.log(baz);',
-        'js2/other.min.js': 'var other = "other"; console.log(other);',
-    };
     var files = {
         // tests that non HTML / CSS file is ignored
         'foo.png': {},
@@ -252,6 +253,19 @@ describe('index.js', function () {
         plugin(files, undefined, function () {
             expect(typeof files['js2/baz.min.js']).to.equal('object');
             expect(typeof files['js2/baz.min.js.map']).to.equal('object');
+            done();
+        });
+    });
+
+    it('respects options.windows', function (done) {
+        var plugin = subject({ concat: {}, root: 'js3', windows: true });
+        var files;
+
+        contents['js3\\windows.js'] = 'var other = "windows"; console.log(windows);';
+        files = make_files();
+
+        plugin(files, undefined, function () {
+            expect(typeof files['js3\\scripts.min.js']).to.equal('object');
             done();
         });
     });

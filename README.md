@@ -67,6 +67,10 @@ The plugin function accepts a configuration object as the first argument.
   UglifyJS configuration (see [UglifyJS docs](https://github.com/mishoo/UglifyJS2#minify-options)).
   Default is `{ sourceMap: { includeSources: true } }`.
 
+* {boolean} **`options.windows`** -
+  Set this if you are using the plugin on Windows.
+
+
 ## Upgrading from version 1.x
 
 Version 2 is a rewrite of the plugin with significant breaking changes to the options object.

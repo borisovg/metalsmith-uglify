@@ -19,7 +19,7 @@ var logMainDebug = debug('metalsmith-uglify:debug:main');
 var logMinify = debug('metalsmith-uglify:info:minify');
 var jsRe = new RegExp('.js$');
 var jsMinRe = new RegExp('.min.js$');
-var uglify;
+var separator, uglify;
 
 function get_root (names, opts) {
     var root = '';
@@ -29,11 +29,11 @@ function get_root (names, opts) {
     } else if (opts.root) {
         root = opts.root;
     } else if (!opts.concat && names.length) {
-        root = names[0].split('/').slice(0, -1).join('/');
+        root = names[0].split(separator).slice(0, -1).join(separator);
     }
 
-    if (root && root.substr(-1) !== '/') {
-        root += '/';
+    if (root && root.substr(-1) !== separator) {
+        root += separator;
     }
 
     return root;
@@ -67,9 +67,9 @@ function get_min_path (root, names, opts) {
     if (opts.concat) {
         return root + ((opts.concat.file) ? opts.concat.file : 'scripts.min.js');
     } else if (opts.sameName) {
-        return root + names[0].split('/').pop();
+        return root + names[0].split(separator).pop();
     } else {
-        return root + names[0].split('/').pop().replace(jsRe, '.min.js');
+        return root + names[0].split(separator).pop().replace(jsRe, '.min.js');
     }
 }
 
@@ -104,7 +104,7 @@ function minify (names, files, opts) {
     }
 
     if (opts.uglify.sourceMap) {
-        var nameMin = pathMin.split('/').pop();
+        var nameMin = pathMin.split(separator).pop();
         var pathMinMap = pathMin + '.map';
 
         opts.uglify.sourceMap.filename = nameMin;
@@ -144,6 +144,7 @@ function plugin (opts) {
         opts.uglify.sourceMap.includeSources = true;
     }
 
+    separator = (opts.windows) ? '\\' : '/';
     uglify = require((opts.es) ? 'uglify-es' : 'uglify-js');
 
     return function main (files, metalsmith, done) {
