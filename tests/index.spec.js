@@ -76,7 +76,7 @@ describe('index.js', function () {
         });
     });
 
-    it('filter out everything', function (done) {
+    it('respects options.filter', function (done) {
         var files = make_files();
         var plugin = subject({
             concat: {},
