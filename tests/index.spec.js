@@ -17,14 +17,11 @@ function make_files () {
         'js1/foo.js': 'var foo = "foo"; console.log(foo);',
         'js1/bar.js': 'var bar = "bar"; console.log(bar);',
         'js2/baz.js': 'var baz = "baz"; console.log(baz);',
-        'other.min.js': 'var other = "other"; console.log(other);',
+        'js2/other.min.js': 'var other = "other"; console.log(other);',
     };
     var files = {
         // tests that non HTML / CSS file is ignored
         'foo.png': {},
-
-        // tests that minified file is ignored
-        'other.min.js': {}
     };
 
     Object.keys(contents).forEach(function (name) {
@@ -129,28 +126,29 @@ describe('index.js', function () {
         });
     });
 
-    it('concatenates files (overwrite default filter)', function (done) {
+    it('includes minified files in bundle with custom filter', function (done) {
         var files = make_files();
         var plugin = subject({
-            concat: {},
-            filter: function() {
-                return true;
+            concat: {
+                file: 'bundle.min.js',
+                root: 'js2'
+            },
+            filter: function (name) {
+                return name.match(/\.js$/);
             }
         });
 
         plugin(files, undefined, function () {
-            expect(typeof files['scripts.min.js']).to.equal('object');
-            expect(typeof files['scripts.min.js.map']).to.equal('object');
-            expect(files['js1/foo.min.js']).to.equal(undefined);
-            expect(files['js1/foo.min.js.map']).to.equal(undefined);
+            expect(typeof files['js2/bundle.min.js']).to.equal('object');
+            expect(typeof files['js2/bundle.min.js.map']).to.equal('object');
 
-            var map = JSON.parse(files['scripts.min.js.map'].contents.toString());
+            var map = JSON.parse(files['js2/bundle.min.js.map'].contents.toString());
 
-            expect(map.file).to.equal('scripts.min.js');
-            expect(map.sources.length).to.equal(4);
-            expect(map.sourcesContent.length).to.equal(4);
+            expect(map.file).to.equal('bundle.min.js');
+            expect(map.sources.length).to.equal(2);
+            expect(map.sourcesContent.length).to.equal(2);
 
-            ['other.min', 'js1/foo', 'js1/bar', 'js2/baz'].forEach(function (base, idx) {
+            ['js2/baz', 'js2/other.min'].forEach(function (base, idx) {
                 var name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
