@@ -11,6 +11,7 @@
 
 var debug = require('debug');
 
+var logGetJsFiles = debug('metalsmith-uglify:info:get_js_files');
 var logCallUglify = debug('metalsmith-uglify:info:call_uglify');
 var logCallUglifyDebug = debug('metalsmith-uglify:debug:call_uglify');
 var logMain = debug('metalsmith-uglify:info:main');
@@ -40,6 +41,8 @@ function get_root (names, opts) {
 function get_js_files (files, opts) {
     var list = Object.keys(files);
     var root = get_root([], opts);
+
+    logGetJsFiles('Root: %s', root || 'undefined');
 
     if (root) {
         list = list.filter(function (name) {
