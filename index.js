@@ -15,6 +15,7 @@ var logGetJsFiles = debug('metalsmith-uglify:info:get_js_files');
 var logCallUglify = debug('metalsmith-uglify:info:call_uglify');
 var logCallUglifyDebug = debug('metalsmith-uglify:debug:call_uglify');
 var logMain = debug('metalsmith-uglify:info:main');
+var logMainDebug = debug('metalsmith-uglify:debug:main');
 var logMinify = debug('metalsmith-uglify:info:minify');
 var jsRe = new RegExp('.js$');
 var jsMinRe = new RegExp('.min.js$');
@@ -150,6 +151,7 @@ function plugin (opts) {
         var i;
 
         logMain('Options: %O', opts);
+        logMainDebug('Input Files: %O', Object.keys(files));
         logMain('JS Files: %O', jsFiles);
         logMain('Processing Started');
 
