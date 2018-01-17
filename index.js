@@ -38,23 +38,22 @@ function get_root (names, opts) {
 }
 
 function get_js_files (files, opts) {
-    var root;
+    var list = Object.keys(files);
+    var root = get_root([], opts);
 
-    var list = Object.keys(files).filter(function (name) {
-        return (name.match(jsRe) && !name.match(jsMinRe));
-    });
+    if (root) {
+        list = list.filter(function (name) {
+            return (name.indexOf(root) === 0);
+        });
+    }
 
     if (opts.filter) {
         list = list.filter(opts.filter);
 
     } else {
-        root = get_root([], opts);
-
-        if (root) {
-            list = list.filter(function (name) {
-                return (name.indexOf(root) === 0);
-            });
-        }
+        list = list.filter(function (name) {
+            return (name.match(jsRe) && !name.match(jsMinRe));
+        });
     }
 
     return list;
