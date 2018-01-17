@@ -57,7 +57,7 @@ The plugin function accepts a configuration object as the first argument.
   Set to limit the plugin to a specific source directory.
 
 * {boolean} **`options.removeOriginal`** -
-  Set to keep the original (unminified) file from being included in the output directory.
+  Set to exclude the original (unminified) file from the output directory.
 
 * {boolean} **`options.sameName`** -
   Set to keep minified name as is without adding `.min`.
