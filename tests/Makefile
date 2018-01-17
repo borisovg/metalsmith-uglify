@@ -9,19 +9,19 @@ clean:
 		.nyc_output \
 		../node_modules/.cache/nyc \
 		coverage \
-		node_modules \
+		node_modules
 	rm -f npm-debug.log
 
 ## test:   run the tests (default target)
 .PHONY: test
 test: node_modules
 	DEBUG=metalsmith-uglify:info:* ./node_modules/.bin/nyc \
-		  --cwd ../ \
-		  --exclude tests/** \
-		  --reporter=html \
-		  --reporter=text \
-		  --temp-directory ./tests/.nyc_output \
-		  node_modules/.bin/mocha index.spec.js
+		--cwd ../ \
+		--exclude tests/** \
+		--reporter=html \
+		--reporter=text \
+		--temp-directory ./tests/.nyc_output \
+		node_modules/.bin/mocha index.spec.js
 
 .PHONY: coverage
 coverage:
