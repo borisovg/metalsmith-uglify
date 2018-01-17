@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-uglify",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "An uglify plugin for Metalsmith.",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,8 @@
     "minification"
   ],
   "author": {
-      "name": "George Borisov",
-      "url": "https://github.com/borisovg"
+    "name": "George Borisov",
+    "url": "https://github.com/borisovg"
   },
   "contributors": [
     {
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "debug": "^3.0.1",
-    "uglify-es": "^3.0.28",
-    "uglify-js": "^3.0.28"
+    "uglify-es": "^3.3.7",
+    "uglify-js": "^3.3.7"
   }
 }
