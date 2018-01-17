@@ -13,7 +13,7 @@ var layouts = require('metalsmith-layouts');
 var markdown = require('metalsmith-markdown-remarkable');
 var metalsmith = require('metalsmith');
 
-// in real life require('metalsmith-inline-css')
+// in real life require('metalsmith-uglify')
 var uglify = require('../index.js');
 
 var log = debug('metalsmith-uglify:info:example');
@@ -31,7 +31,7 @@ metalsmith(__dirname)
     .use(markdown('commonmark', {
         html: true
     }))
-    .use(layouts('pug'))
+    .use(layouts())
     .use(uglify({
         concat: {
             file: 'bundle.min.js',
