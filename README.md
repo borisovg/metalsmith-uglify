@@ -69,6 +69,7 @@ The plugin function accepts a configuration object as the first argument.
 
 * {boolean} **`options.windows`** -
   Set this if you are using the plugin on Windows.
+  If you are using any of the `root` options, you will need to use `\\` instead of `/` in the path.
 
 
 ## Upgrading from version 1.x
