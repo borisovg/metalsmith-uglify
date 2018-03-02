@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "debug": "^3.0.1",
-    "uglify-es": "^3.3.7",
-    "uglify-js": "^3.3.7"
+    "uglify-es": "^3.3.10",
+    "uglify-js": "^3.3.12"
   }
 }
