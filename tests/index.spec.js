@@ -135,7 +135,7 @@ describe('index.js', function () {
                 root: 'js2'
             },
             filter: function (name) {
-                return name.match(/\.js$/);
+                return name.match(/js2\/.+\.js$/);
             }
         });
 

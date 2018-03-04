@@ -45,16 +45,16 @@ function get_js_files (files, opts) {
 
     logGetJsFiles('Root: %s', root || 'undefined');
 
-    if (root) {
-        list = list.filter(function (name) {
-            return (name.indexOf(root) === 0);
-        });
-    }
-
     if (opts.filter) {
         list = list.filter(opts.filter);
 
     } else {
+        if (root) {
+            list = list.filter(function (name) {
+                return (name.indexOf(root) === 0);
+            });
+        }
+
         list = list.filter(function (name) {
             return (name.match(jsRe) && !name.match(jsMinRe));
         });
@@ -97,6 +97,8 @@ function minify (names, files, opts) {
     var pathMin = get_min_path(root, names, opts);
     var src = {};
     var i, name, result;
+
+    logMinify('pathMin: %s', pathMin);
 
     for (i = 0; i < names.length; i += 1) {
         name = names[i].substr(root.length);
