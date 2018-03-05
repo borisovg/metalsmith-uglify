@@ -12,18 +12,20 @@
 var expect = require('chai').expect;
 var subject = require('../index.js');
 
-var contents = {
+var testFiles = {
     'js1/foo.js': 'var foo = "foo"; console.log(foo);',
     'js1/bar.js': 'var bar = "bar"; console.log(bar);',
     'js2/baz.js': 'var baz = "baz"; console.log(baz);',
     'js2/other.min.js': 'var other = "other"; console.log(other);'
 };
 
-function make_files () {
+function make_files (contents) {
     var files = {
         // tests that non HTML / CSS file is ignored
         'foo.png': {},
     };
+
+    contents = contents || testFiles;
 
     Object.keys(contents).forEach(function (name) {
         files[name] = {
@@ -159,6 +161,45 @@ describe('index.js', function () {
         });
     });
 
+    it('concatenates files listed in opts.files in the order given', function () {
+        var files = make_files({
+            'js1/foo.js': 'console.log(foo.bar);',
+            'js1/bar.js': '(function () { foo = { bar: "foobar" }; }());',
+        });
+        var plugin = subject({ concat: { root: 'js1' }, files: ['js1/bar.js', 'js1/foo.js'] });
+
+        plugin(files, undefined, function () {
+            console.log(files);
+            expect(typeof files['js1/scripts.min.js']).to.equal('object');
+            expect(typeof files['js1/scripts.min.js.map']).to.equal('object');
+            expect(files['js1/foo.min.js']).to.equal(undefined);
+            expect(files['js1/foo.min.js.map']).to.equal(undefined);
+
+            var map = JSON.parse(files['js1/scripts.min.js.map'].contents.toString());
+
+            expect(map.file).to.equal('scripts.min.js');
+            expect(map.sources.length).to.equal(2);
+            expect(map.sourcesContent.length).to.equal(2);
+
+            ['js1/bar', 'js1/foo'].forEach(function (base, idx) {
+                var name = base + '.js';
+                expect(map.sources[idx]).to.equal(name);
+                expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
+            });
+        });
+    });
+
+    it('throws error if a file listed in opts.files in not availables', function (done) {
+        var plugin = subject({ files: ['js1/spanner.js'] });
+
+        try {
+            plugin({});
+        } catch (e) {
+            expect(typeof e.message).to.equal('string');
+            done();
+        }
+    });
+
     it('respects opts.concat.root', function (done) {
         var files = make_files();
         var plugin = subject({ concat: { root: 'js1' } });
@@ -261,7 +302,7 @@ describe('index.js', function () {
         var plugin = subject({ concat: {}, root: 'js3', windows: true });
         var files;
 
-        contents['js3\\windows.js'] = 'var other = "windows"; console.log(windows);';
+        testFiles['js3\\windows.js'] = 'var other = "windows"; console.log(windows);';
         files = make_files();
 
         plugin(files, undefined, function () {

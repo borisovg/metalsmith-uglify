@@ -40,14 +40,18 @@ The plugin function accepts a configuration object as the first argument.
 
 * {object} **`options.concat`** -
   Set to concatenate to a single bundle file.
-  _UglifyJS does not provide any ordering guarantees._
 
   - {string} **`options.concat.file`** -
     Name of the bundle file. Default is `scripts.min.js`.
 
   - {string} **`options.concat.root`** -
-    Set to limit the plugin to a specific source directory.
+    Directory where the bundle file will be placed.
     This option overrides `options.root`.
+
+* {Array[string]} **`options.files`** -
+  List of files to be processed.
+  If `options.concat` is set, files will be passed to UglifyJS in that order.
+  This option overrides `options.filter`.
 
 * {function} **`options.filter`** -
   Function to filter the list of JavaScript files.

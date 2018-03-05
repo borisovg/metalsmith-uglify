@@ -42,10 +42,20 @@ function get_root (names, opts) {
 function get_js_files (files, opts) {
     var list = Object.keys(files);
     var root = get_root([], opts);
+    var i, list;
 
     logGetJsFiles('Root: %s', root || 'undefined');
 
-    if (opts.filter) {
+    if (opts.files) {
+        list = opts.files;
+
+        for (i = 0; i < list.length; i += 1) {
+            if (!files[list[i]]) {
+                throw new Error('File not available: ' + list[i]);
+            }
+        }
+
+    } else if (opts.filter) {
         list = list.filter(opts.filter);
 
     } else {
@@ -79,7 +89,7 @@ function call_uglify (src, opts) {
     if (result.error) {
         logCallUglify('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
         logCallUglify('UglifyJS Error: %O', result.error);
-        throw(new Error(require('util').format('UglifyJS Error: %j', result.error)));
+        throw new Error(require('util').format('UglifyJS Error: %j', result.error));
     }
 
     logCallUglifyDebug('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
@@ -98,6 +108,7 @@ function minify (names, files, opts) {
     var src = {};
     var i, name, result;
 
+    logMinify('Root: %s', root);
     logMinify('pathMin: %s', pathMin);
 
     for (i = 0; i < names.length; i += 1) {
@@ -150,11 +161,12 @@ function plugin (opts) {
     uglify = require((opts.es) ? 'uglify-es' : 'uglify-js');
 
     return function main (files, metalsmith, done) {
+        logMain('Options: %O', opts);
+        logMainDebug('Input Files: %O', Object.keys(files));
+
         var jsFiles = get_js_files(files, opts);
         var i;
 
-        logMain('Options: %O', opts);
-        logMainDebug('Input Files: %O', Object.keys(files));
         logMain('JS Files: %O', jsFiles);
         logMain('Processing Started');
 
