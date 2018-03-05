@@ -83,7 +83,7 @@ function call_uglify (src, opts) {
     }
 
     logCallUglifyDebug('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
-    logCallUglify('Result: %O', result);
+    logCallUglifyDebug('Result: %O', result);
 
     return result;
 }
