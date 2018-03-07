@@ -51,6 +51,7 @@ The plugin function accepts a configuration object as the first argument.
 * {Array[string]} **`options.files`** -
   List of files to be processed.
   If `options.concat` is set, files will be passed to UglifyJS in that order.
+  This option is only needed for bundling badly written code (e.g. jQuery) that relies on files being processed in a certain order.
   This option overrides `options.filter`.
 
 * {function} **`options.filter`** -
