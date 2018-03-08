@@ -33,6 +33,6 @@
   "dependencies": {
     "debug": "^3.0.1",
     "uglify-es": "^3.3.10",
-    "uglify-js": "^3.3.12"
+    "uglify-js": "^3.3.13"
   }
 }
