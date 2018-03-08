@@ -14,8 +14,8 @@ npm install metalsmith-uglify
 
 Add the plugin to your Metalsmith build chain:
 ```
-var metalsmith = require('metalsmith');
-var uglify = require('metalsmith-uglify');
+const metalsmith = require('metalsmith');
+const uglify = require('metalsmith-uglify');
 
 metalsmith(__dirname)
     .source('./src')
