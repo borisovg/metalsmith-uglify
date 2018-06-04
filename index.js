@@ -158,7 +158,7 @@ function plugin (opts) {
     }
 
     separator = (opts.windows) ? '\\' : '/';
-    uglify = require((opts.es) ? 'uglify-es' : 'uglify-js');
+    uglify = require((opts.es) ? 'terser' : 'uglify-js');
 
     return function main (files, metalsmith, done) {
         logMain('Options: %O', opts);

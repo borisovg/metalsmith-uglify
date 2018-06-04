@@ -35,7 +35,7 @@ metalsmith(__dirname)
 The plugin function accepts a configuration object as the first argument.
 
 * {boolean} **`options.es`** -
-  Set to use `uglify-es` package instead of `uglify-js`.
+  Set to use `terser` package instead of `uglify-js`.
   It will set also set `options.uglify.ecma = 6` by default.
 
 * {object} **`options.concat`** -
