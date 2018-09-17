@@ -1,0 +1,6 @@
+.js*
+.travis.yml
+example
+local
+Makefile
+tests
