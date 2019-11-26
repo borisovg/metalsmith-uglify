@@ -8,6 +8,6 @@
     "metalsmith-html-minifier": "^4.0.0",
     "metalsmith-layouts": "^2.3.1",
     "metalsmith-markdown-remarkable": "^1.0.1",
-    "opn-cli": "^5.0.0"
+    "open-cli": "^5.0.0"
   }
 }
