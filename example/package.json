@@ -1,13 +1,13 @@
 {
   "private": true,
   "dependencies": {
-    "debug": "^4.0.1",
-    "html-minifier": "^3.5.20",
+    "debug": "^4.1.1",
+    "html-minifier": "^4.0.0",
     "jstransformer-pug": "^0.3.0",
     "metalsmith": "^2.3.0",
-    "metalsmith-html-minifier": "^3.0.0",
-    "metalsmith-layouts": "^2.2.0",
-    "metalsmith-markdown-remarkable": "^0.1.1",
-    "opn-cli": "^3.1.0"
+    "metalsmith-html-minifier": "^4.0.0",
+    "metalsmith-layouts": "^2.3.1",
+    "metalsmith-markdown-remarkable": "^1.0.1",
+    "opn-cli": "^5.0.0"
   }
 }
