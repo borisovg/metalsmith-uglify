@@ -9,20 +9,20 @@
 * @license LGPL-3.0
 */
 
-var debug = require('debug');
+const debug = require('debug');
 
-var logGetJsFiles = debug('metalsmith-uglify:info:get_js_files');
-var logCallUglify = debug('metalsmith-uglify:info:call_uglify');
-var logCallUglifyDebug = debug('metalsmith-uglify:debug:call_uglify');
-var logMain = debug('metalsmith-uglify:info:main');
-var logMainDebug = debug('metalsmith-uglify:debug:main');
-var logMinify = debug('metalsmith-uglify:info:minify');
-var jsRe = new RegExp('.js$');
-var jsMinRe = new RegExp('.min.js$');
-var separator, uglify;
+const logGetJsFiles = debug('metalsmith-uglify:info:get_js_files');
+const logCallUglify = debug('metalsmith-uglify:info:call_uglify');
+const logCallUglifyDebug = debug('metalsmith-uglify:debug:call_uglify');
+const logMain = debug('metalsmith-uglify:info:main');
+const logMainDebug = debug('metalsmith-uglify:debug:main');
+const logMinify = debug('metalsmith-uglify:info:minify');
+const jsRe = new RegExp('.js$');
+const jsMinRe = new RegExp('.min.js$');
+let separator, uglify;
 
 function get_root (names, opts) {
-    var root = '';
+    let root = '';
 
     if (opts.concat && opts.concat.root) {
         root = opts.concat.root;
@@ -40,16 +40,15 @@ function get_root (names, opts) {
 }
 
 function get_js_files (files, opts) {
-    var list = Object.keys(files);
-    var root = get_root([], opts);
-    var i, list;
+    const root = get_root([], opts);
+    let list = Object.keys(files);
 
     logGetJsFiles('Root: %s', root || 'undefined');
 
     if (opts.files) {
         list = opts.files;
 
-        for (i = 0; i < list.length; i += 1) {
+        for (let i = 0; i < list.length; i += 1) {
             if (!files[list[i]]) {
                 throw new Error('File not available: ' + list[i]);
             }
@@ -83,8 +82,14 @@ function get_min_path (root, names, opts) {
     }
 }
 
-function call_uglify (src, opts) {
-    var result = uglify.minify(src, opts);
+async function call_uglify (src, opts) {
+    let result;
+
+    try {
+        result = await uglify.minify(src, opts);
+    } catch (e) {
+        result.error = e;
+    }
 
     if (result.error) {
         logCallUglify('UglifyJS Command: uglify.minify(%O, %O)', src, opts);
@@ -98,42 +103,43 @@ function call_uglify (src, opts) {
     return result;
 }
 
-function minify (names, files, opts) {
+async function minify (names, files, opts) {
     if (!names.length) {
         return;
     }
 
-    var root = get_root(names, opts);
-    var pathMin = get_min_path(root, names, opts);
-    var src = {};
-    var i, name, result;
+    const root = get_root(names, opts);
+    const pathMin = get_min_path(root, names, opts);
+    const src = {};
 
     logMinify('Root: %s', root);
     logMinify('pathMin: %s', pathMin);
 
-    for (i = 0; i < names.length; i += 1) {
-        name = names[i].substr(root.length);
+    for (let i = 0; i < names.length; i += 1) {
+        const name = names[i].substr(root.length);
         src[names[i]] = files[names[i]].contents.toString();
     }
 
+    let result;
+
     if (opts.uglify.sourceMap) {
-        var nameMin = pathMin.split(separator).pop();
-        var pathMinMap = pathMin + '.map';
+        const nameMin = pathMin.split(separator).pop();
+        const pathMinMap = pathMin + '.map';
 
         opts.uglify.sourceMap.filename = nameMin;
         opts.uglify.sourceMap.url = nameMin + '.map';
 
-        result = call_uglify(src, opts.uglify);
-        files[pathMinMap] = { contents: new Buffer(result.map) };
+        result = await call_uglify(src, opts.uglify);
+        files[pathMinMap] = { contents: new Buffer.from(result.map) };
 
     } else {
-        result = call_uglify(src, opts.uglify);
+        result = await call_uglify(src, opts.uglify);
     }
 
-    files[pathMin] = { contents: new Buffer(result.code) };
+    files[pathMin] = { contents: new Buffer.from(result.code) };
 
     if (opts.removeOriginal && !opts.sameName) {
-        for (i = 0; i < names.length; i += 1) {
+        for (let i = 0; i < names.length; i += 1) {
             delete files[names[i]];
             logMinify('Removed: %s', names[i]);
         }
@@ -160,27 +166,25 @@ function plugin (opts) {
     separator = (opts.windows) ? '\\' : '/';
     uglify = require((opts.es) ? 'terser' : 'uglify-js');
 
-    return function main (files, metalsmith, done) {
+    return function main (files, _metalsmith, done) {
         logMain('Options: %O', opts);
         logMainDebug('Input Files: %O', Object.keys(files));
 
-        var jsFiles = get_js_files(files, opts);
-        var i;
+        const jsFiles = get_js_files(files, opts);
 
         logMain('JS Files: %O', jsFiles);
         logMain('Processing Started');
 
-        if (opts.concat) {
-            minify(jsFiles, files, opts);
-        } else {
-            for (i = 0; i < jsFiles.length; i += 1) {
-                minify([jsFiles[i]], files, opts);
-            }
-        }
+        const promises = (opts.concat)
+            ? [minify(jsFiles, files, opts)]
+            : jsFiles.map((f) => minify([f], files, opts));
 
-        logMain('Processing Finished');
-
-        done();
+        Promise.all(promises)
+            .then(() => {
+                logMain('Processing Finished');
+                done();
+            })
+            .catch(done);
     };
 }
 

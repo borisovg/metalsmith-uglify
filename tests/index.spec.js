@@ -9,10 +9,10 @@
 * @license LGPL-3.0
 */
 
-var expect = require('chai').expect;
-var subject = require('../index.js');
+const expect = require('chai').expect;
+const subject = require('../index.js');
 
-var testFiles = {
+const testFiles = {
     'js1/foo.js': 'var foo = "foo"; console.log(foo);',
     'js1/bar.js': 'var bar = "bar"; console.log(bar);',
     'js2/baz.js': 'var baz = "baz"; console.log(baz);',
@@ -20,7 +20,7 @@ var testFiles = {
 };
 
 function make_files (contents) {
-    var files = {
+    const files = {
         // tests that non HTML / CSS file is ignored
         'foo.png': {},
     };
@@ -29,7 +29,7 @@ function make_files (contents) {
 
     Object.keys(contents).forEach(function (name) {
         files[name] = {
-            contents: new Buffer(contents[name]),
+            contents: new Buffer.from(contents[name]),
             contentsRaw: contents[name],
             path: name
         };
@@ -44,7 +44,7 @@ describe('index.js', function () {
     });
 
     it('sets default options', function () {
-        var opts = {};
+        const opts = {};
         subject(opts);
         expect(Object.keys(opts).length).to.equal(1);
         expect(Object.keys(opts.uglify).length).to.equal(1);
@@ -53,8 +53,8 @@ describe('index.js', function () {
     });
 
     it('minifies files and creates source map', function (done) {
-        var files = make_files();
-        var plugin = subject();
+        const files = make_files();
+        const plugin = subject();
 
         plugin(files, undefined, function () {
             expect(typeof files['js1/foo.min.js']).to.equal('object');
@@ -64,7 +64,7 @@ describe('index.js', function () {
             expect(typeof files['js2/baz.min.js']).to.equal('object');
             expect(typeof files['js2/baz.min.js.map']).to.equal('object');
 
-            var map = JSON.parse(files['js1/foo.min.js.map'].contents.toString());
+            const map = JSON.parse(files['js1/foo.min.js.map'].contents.toString());
 
             expect(map.file).to.equal('foo.min.js');
             expect(map.sources.length).to.equal(1);
@@ -77,8 +77,8 @@ describe('index.js', function () {
     });
 
     it('respects options.filter', function (done) {
-        var files = make_files();
-        var plugin = subject({
+        const files = make_files();
+        const plugin = subject({
             concat: {},
             filter: function () {
                 return false;
@@ -92,8 +92,8 @@ describe('index.js', function () {
     });
 
     it('respects options.root', function (done) {
-        var files = make_files();
-        var plugin = subject({ root: 'js2/' });
+        const files = make_files();
+        const plugin = subject({ root: 'js2/' });
 
         plugin(files, undefined, function () {
             expect(files['js1/foo.min.js']).to.equal(undefined);
@@ -104,8 +104,8 @@ describe('index.js', function () {
     });
 
     it('concatenates files', function (done) {
-        var files = make_files();
-        var plugin = subject({ concat: {} });
+        const files = make_files();
+        const plugin = subject({ concat: {} });
 
         plugin(files, undefined, function () {
             expect(typeof files['scripts.min.js']).to.equal('object');
@@ -113,14 +113,14 @@ describe('index.js', function () {
             expect(files['js1/foo.min.js']).to.equal(undefined);
             expect(files['js1/foo.min.js.map']).to.equal(undefined);
 
-            var map = JSON.parse(files['scripts.min.js.map'].contents.toString());
+            const map = JSON.parse(files['scripts.min.js.map'].contents.toString());
 
             expect(map.file).to.equal('scripts.min.js');
             expect(map.sources.length).to.equal(3);
             expect(map.sourcesContent.length).to.equal(3);
 
             ['js1/foo', 'js1/bar', 'js2/baz'].forEach(function (base, idx) {
-                var name = base + '.js';
+                const name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
             });
@@ -130,8 +130,8 @@ describe('index.js', function () {
     });
 
     it('includes minified files in bundle with custom filter', function (done) {
-        var files = make_files();
-        var plugin = subject({
+        const files = make_files();
+        const plugin = subject({
             concat: {
                 file: 'bundle.min.js',
                 root: 'js2'
@@ -145,14 +145,14 @@ describe('index.js', function () {
             expect(typeof files['js2/bundle.min.js']).to.equal('object');
             expect(typeof files['js2/bundle.min.js.map']).to.equal('object');
 
-            var map = JSON.parse(files['js2/bundle.min.js.map'].contents.toString());
+            const map = JSON.parse(files['js2/bundle.min.js.map'].contents.toString());
 
             expect(map.file).to.equal('bundle.min.js');
             expect(map.sources.length).to.equal(2);
             expect(map.sourcesContent.length).to.equal(2);
 
             ['js2/baz', 'js2/other.min'].forEach(function (base, idx) {
-                var name = base + '.js';
+                const name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
             });
@@ -162,27 +162,26 @@ describe('index.js', function () {
     });
 
     it('concatenates files listed in opts.files in the order given', function () {
-        var files = make_files({
+        const files = make_files({
             'js1/foo.js': 'console.log(foo.bar);',
             'js1/bar.js': '(function () { foo = { bar: "foobar" }; }());',
         });
-        var plugin = subject({ concat: { root: 'js1' }, files: ['js1/bar.js', 'js1/foo.js'] });
+        const plugin = subject({ concat: { root: 'js1' }, files: ['js1/bar.js', 'js1/foo.js'] });
 
         plugin(files, undefined, function () {
-            console.log(files);
             expect(typeof files['js1/scripts.min.js']).to.equal('object');
             expect(typeof files['js1/scripts.min.js.map']).to.equal('object');
             expect(files['js1/foo.min.js']).to.equal(undefined);
             expect(files['js1/foo.min.js.map']).to.equal(undefined);
 
-            var map = JSON.parse(files['js1/scripts.min.js.map'].contents.toString());
+            const map = JSON.parse(files['js1/scripts.min.js.map'].contents.toString());
 
             expect(map.file).to.equal('scripts.min.js');
             expect(map.sources.length).to.equal(2);
             expect(map.sourcesContent.length).to.equal(2);
 
             ['js1/bar', 'js1/foo'].forEach(function (base, idx) {
-                var name = base + '.js';
+                const name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
             });
@@ -190,7 +189,7 @@ describe('index.js', function () {
     });
 
     it('throws error if a file listed in opts.files in not availables', function (done) {
-        var plugin = subject({ files: ['js1/spanner.js'] });
+        const plugin = subject({ files: ['js1/spanner.js'] });
 
         try {
             plugin({});
@@ -201,8 +200,8 @@ describe('index.js', function () {
     });
 
     it('respects opts.concat.root', function (done) {
-        var files = make_files();
-        var plugin = subject({ concat: { root: 'js1' } });
+        const files = make_files();
+        const plugin = subject({ concat: { root: 'js1' } });
 
         plugin(files, undefined, function () {
             expect(typeof files['js1/scripts.min.js']).to.equal('object');
@@ -210,14 +209,14 @@ describe('index.js', function () {
             expect(files['js1/foo.min.js']).to.equal(undefined);
             expect(files['js1/foo.min.js.map']).to.equal(undefined);
 
-            var map = JSON.parse(files['js1/scripts.min.js.map'].contents.toString());
+            const map = JSON.parse(files['js1/scripts.min.js.map'].contents.toString());
 
             expect(map.file).to.equal('scripts.min.js');
             expect(map.sources.length).to.equal(2);
             expect(map.sourcesContent.length).to.equal(2);
 
             ['js1/foo', 'js1/bar'].forEach(function (base, idx) {
-                var name = base + '.js';
+                const name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
             });
@@ -227,22 +226,22 @@ describe('index.js', function () {
     });
 
     it('respects opts.concat.file', function (done) {
-        var files = make_files();
-        var plugin = subject({ concat: { file: 'bundle.min.js', root: 'js1' } });
+        const files = make_files();
+        const plugin = subject({ concat: { file: 'bundle.min.js', root: 'js1' } });
 
         plugin(files, undefined, function () {
             expect(typeof files['js1/bundle.min.js']).to.equal('object');
             expect(typeof files['js1/bundle.min.js.map']).to.equal('object');
             expect(files['js1/scripts.min.js']).to.equal(undefined);
 
-            var map = JSON.parse(files['js1/bundle.min.js.map'].contents.toString());
+            const map = JSON.parse(files['js1/bundle.min.js.map'].contents.toString());
 
             expect(map.file).to.equal('bundle.min.js');
             expect(map.sources.length).to.equal(2);
             expect(map.sourcesContent.length).to.equal(2);
 
             ['js1/foo', 'js1/bar'].forEach(function (base, idx) {
-                var name = base + '.js';
+                const name = base + '.js';
                 expect(map.sources[idx]).to.equal(name);
                 expect(map.sourcesContent[idx]).to.equal(files[name].contentsRaw);
             });
@@ -252,8 +251,8 @@ describe('index.js', function () {
     });
 
     it('respects options.removeOriginal', function (done) {
-        var files = make_files();
-        var plugin = subject({ removeOriginal: true, root: 'js2' });
+        const files = make_files();
+        const plugin = subject({ removeOriginal: true, root: 'js2' });
 
         plugin(files, undefined, function () {
             expect(files['js2/baz.js']).to.equal(undefined);
@@ -263,8 +262,8 @@ describe('index.js', function () {
     });
 
     it('respects options.sameName', function (done) {
-        var files = make_files();
-        var plugin = subject({ sameName: true, root: 'js2' });
+        const files = make_files();
+        const plugin = subject({ sameName: true, root: 'js2' });
 
         plugin(files, undefined, function () {
             expect(typeof files['js2/baz.js']).to.equal('object');
@@ -276,8 +275,8 @@ describe('index.js', function () {
     });
 
     it('allows user to override map creation', function (done) {
-        var files = make_files();
-        var plugin = subject({ root: 'js2', uglify: { sourceMap: false } });
+        const files = make_files();
+        const plugin = subject({ root: 'js2', uglify: { sourceMap: false } });
 
         plugin(files, undefined, function () {
             expect(files['js1/foo.min.js']).to.equal(undefined);
@@ -288,8 +287,8 @@ describe('index.js', function () {
     });
 
     it('respects options.es', function (done) {
-        var files = make_files();
-        var plugin = subject({ es: true });
+        const files = make_files();
+        const plugin = subject({ es: true });
 
         plugin(files, undefined, function () {
             expect(typeof files['js2/baz.min.js']).to.equal('object');
@@ -299,7 +298,7 @@ describe('index.js', function () {
     });
 
     it('respects options.windows', function (done) {
-        var plugin = subject({ concat: {}, root: 'js3', windows: true });
+        const plugin = subject({ concat: {}, root: 'js3', windows: true });
         var files;
 
         testFiles['js3\\windows.js'] = 'var other = "windows"; console.log(windows);';
@@ -312,12 +311,27 @@ describe('index.js', function () {
     });
 
     it('handles errors in a useful way', function () {
-        var files = {
+        const files = {
             'broken.js': {
-                contents: new Buffer('function spanner () {')
+                contents: new Buffer.from('function spanner () {')
             }
         };
-        var plugin = subject();
+        const plugin = subject();
+
+        try {
+            plugin(files);
+        } catch (e) {
+            expect(e.message.indexOf('broken.js') !== -1);
+        }
+    });
+
+    it('handles errors in a useful way when options.es is set', function () {
+        const files = {
+            'broken.js': {
+                contents: new Buffer.from('function spanner () {')
+            }
+        };
+        const plugin = subject({ es: true });
 
         try {
             plugin(files);
