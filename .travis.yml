@@ -3,5 +3,4 @@ node_js:
     - "12"
     - "14"
     - "lts/*"
-    - "18"
 after_success: make coverage
