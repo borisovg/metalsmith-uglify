@@ -31,8 +31,8 @@
     "url": "https://github.com/borisovg/metalsmith-uglify/issues"
   },
   "dependencies": {
-    "debug": "^4.3.1",
-    "terser": "^5.7.0",
-    "uglify-js": "^3.13.7"
+    "debug": "^4.3.4",
+    "terser": "^5.13.1",
+    "uglify-js": "^3.15.4"
   }
 }
