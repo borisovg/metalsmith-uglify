@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "terser": "^5.13.1",
-    "uglify-js": "^3.15.4"
+    "terser": "^5.19.4",
+    "uglify-js": "^3.17.4"
   }
 }
