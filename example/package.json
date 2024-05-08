@@ -4,10 +4,10 @@
     "debug": "^4.3.4",
     "html-minifier": "^4.0.0",
     "jstransformer-pug": "^0.4.0",
-    "metalsmith": "^2.6.1",
+    "metalsmith": "^2.6.3",
     "metalsmith-html-minifier": "^4.0.1",
     "metalsmith-layouts": "^2.3.1",
     "metalsmith-markdown-remarkable": "^2.0.5",
-    "open-cli": "^7.2.0"
+    "open-cli": "^8.0.0"
   }
 }
