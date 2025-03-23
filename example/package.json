@@ -8,7 +8,7 @@
     "jstransformer-pug": "^0.4.0",
     "metalsmith": "^2.6.3",
     "metalsmith-markdown-remarkable": "^2.0.5",
-    "metalsmith-uglify": "^2.4.3",
+    "metalsmith-uglify": "^2.4.4",
     "open-cli": "^8.0.0"
   }
 }
