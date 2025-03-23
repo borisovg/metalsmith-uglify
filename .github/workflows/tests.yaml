@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16, 18, lts/*]
+        node-version: [18, 20, lts/*]
 
     steps:
       - uses: actions/checkout@v4
@@ -17,11 +17,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
       - run: npm test
       - name: Upload coverage to Codecov
         if: matrix.node-version == 'lts/*'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          working-directory: tests
