@@ -13,10 +13,10 @@ const { strictEqual } = require("assert");
 const subject = require("./index.js");
 
 const testFiles = {
-  "js1/foo.js": 'var foo = "foo"; console.log(foo);',
-  "js1/bar.js": 'var bar = "bar"; console.log(bar);',
-  "js2/baz.js": 'var baz = "baz"; console.log(baz);',
-  "js2/other.min.js": 'var other = "other"; console.log(other);',
+  "js1/foo.js": 'const foo = "foo"; console.log(foo);',
+  "js1/bar.js": 'const bar = "bar"; console.log(bar);',
+  "js2/baz.js": 'const baz = "baz"; console.log(baz);',
+  "js2/other.min.js": 'const other = "other"; console.log(other);',
 };
 
 function make_files(contents) {
@@ -195,7 +195,7 @@ describe("index.js", function () {
     });
   });
 
-  it("throws error if a file listed in opts.files in not availables", function (done) {
+  it("throws error if a file listed in opts.files in not available", function (done) {
     const plugin = subject({ files: ["js1/spanner.js"] });
 
     try {
@@ -310,10 +310,10 @@ describe("index.js", function () {
 
   it("respects options.windows", function (done) {
     const plugin = subject({ concat: {}, root: "js3", windows: true });
-    var files;
+    let files;
 
     testFiles["js3\\windows.js"] =
-      'var other = "windows"; console.log(windows);';
+      'const other = "windows"; console.log(windows);';
     files = make_files();
 
     plugin(files, undefined, function () {

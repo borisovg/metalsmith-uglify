@@ -1,9 +1,9 @@
 /*jshint browser:true*/
 
-(function test () {
-    'use strict';
+(function test() {
+  "use strict";
 
-    var text = 'js/script.js\n';
+  const text = "js/script.js\n";
 
-    document.getElementById('output').innerText += 'Hello from ' + text;
-}());
+  document.getElementById("output").innerText += "Hello from " + text;
+})();
