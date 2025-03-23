@@ -1,3 +1,4 @@
-local
+coverage
 node_modules
 npm-debug.log
+pnpm-lock.yaml

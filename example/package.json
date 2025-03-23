@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "debug": "^4.3.4",
+    "debug": "^4.4.0",
     "html-minifier": "^4.0.0",
     "jstransformer-pug": "^0.4.0",
     "metalsmith": "^2.6.3",
