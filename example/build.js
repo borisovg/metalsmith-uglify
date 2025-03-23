@@ -8,9 +8,8 @@
  */
 
 const debug = require("debug");
-const htmlMinifier = require("metalsmith-html-minifier");
-const layouts = require("metalsmith-layouts");
-const markdown = require("metalsmith-markdown-remarkable");
+const inPlace = require("@metalsmith/in-place");
+const layouts = require("@metalsmith/layouts");
 const metalsmith = require("metalsmith");
 
 // in real life require('metalsmith-uglify')
@@ -29,11 +28,19 @@ metalsmith(__dirname)
   .source("./src")
   .destination("./public")
   .use(
-    markdown("commonmark", {
-      html: true,
+    inPlace({
+      extname: ".pug",
+      transform: "markdown-it",
+      engineOptions: {
+        html: true,
+      },
     })
   )
-  .use(layouts())
+  .use(
+    layouts({
+      transform: "pug",
+    })
+  )
   .use(
     uglify({
       concat: {
@@ -44,7 +51,6 @@ metalsmith(__dirname)
     })
   )
   .use(uglify({ root: "js" }))
-  .use(htmlMinifier())
   .build(function (err) {
     if (err) {
       console.error("Build Failed:", err);

@@ -1,13 +1,14 @@
 {
   "private": true,
-  "dependencies": {
+  "devDependencies": {
+    "@metalsmith/in-place": "^5.0.0",
+    "@metalsmith/layouts": "^3.0.0",
     "debug": "^4.4.0",
-    "html-minifier": "^4.0.0",
+    "jstransformer-markdown-it": "^3.0.0",
     "jstransformer-pug": "^0.4.0",
     "metalsmith": "^2.6.3",
-    "metalsmith-html-minifier": "^4.0.1",
-    "metalsmith-layouts": "^2.3.1",
     "metalsmith-markdown-remarkable": "^2.0.5",
+    "metalsmith-uglify": "^2.4.3",
     "open-cli": "^8.0.0"
   }
 }
